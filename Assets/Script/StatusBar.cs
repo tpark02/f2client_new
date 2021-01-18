@@ -12,7 +12,7 @@ enum Title
     HOME = 0,
     VOCAB_DAY = 1,
     VOCAB_DETAIL = 2,
-    VOCAB = 3,
+    VOCAB_LIST = 3,
     VOCAB_TEST_DAY = 4,
     VOCAB_TEST = 5,
     VOCAB_TEST_RESULT = 6,

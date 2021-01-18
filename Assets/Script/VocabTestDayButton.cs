@@ -28,19 +28,8 @@ class VocabTestDayButton : MonoBehaviour
 
         //ViewVocabList.viewVocabList.SetActive(true);
         //StartCoroutine(LoadVocabList(nTestDay));
-        LoadVocabList(nTestDay);
-    }
-
-    private void LoadVocabList(int d)
-    {
-        OX_DataLoader.InitVocabList(d);
-
-        ViewVocabTest.viewVocabTest.GetComponent<ViewVocabTest>().LoadTestList(d);
-
-        //yield return new WaitWhile(() =>
-        //{
-        //    return ViewVocabTest.isTestLoadingDone == false;
-        //});
-        //GameEventMessage.SendEvent("VocabTestLoadingDone");
+        
+        //OX_DataLoader.InitVocabList(nTestDay);
+        ViewVocabTest.viewVocabTest.GetComponent<ViewVocabTest>().LoadTestList(nTestDay);
     }
 }

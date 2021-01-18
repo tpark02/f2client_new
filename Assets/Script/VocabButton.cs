@@ -8,7 +8,11 @@ using UnityEngine.UI;
 public class VocabButton : MonoBehaviour
 {
     [SerializeField] public Text vocab;
-    [SerializeField] public UIToggle favoriteToggle;
+
+    [SerializeField] public FavoriteToggle favoriteToggle;
+    //[SerializeField] public Toggle favoriteToggle;
+    private OX_DataLoader.VocabData vocabData;
+    //[HideInInspector] public bool startToggleFunction = false;
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnClickVocabButton);
@@ -17,11 +21,12 @@ public class VocabButton : MonoBehaviour
     public void SetVocabButton(string v)
     {
         vocab.text = v;
+        vocabData = OX_DataLoader.GetVocab(vocab.text);
     }
     
     public void OnClickVocabButton()
     {
-        StatusBar.RecordPrevTitle((int)Title.VOCAB);
+        StatusBar.RecordPrevTitle((int)Title.VOCAB_LIST);
         StatusBar.SetStatusTitle((int)Title.VOCAB_DETAIL);
 
         //StartCoroutine(LoadVocabDetail());
@@ -34,7 +39,7 @@ public class VocabButton : MonoBehaviour
         var d = OX_DataLoader.GetVocab(vocab.text);
         ViewVocabDetail.isDetailDone = false;
         
-        ViewVocabDetail.viewVocabDetail.GetComponent<ViewVocabDetail>().SetVocabDetail(vocab.text
+        ViewVocabDetail.viewVocabDetail.GetComponent<ViewVocabDetail>().SetVocabDetail(d.id, vocab.text
             , d.def
             , d.e1
             , d.t1

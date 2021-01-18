@@ -107,11 +107,30 @@ public class DrawerLeft : MonoBehaviour
         StatusBar.statusBar.GetComponent<StatusBar>().selectVocabScroll.SetActive(false);
 
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(false);
-        StartCoroutine(NetWorkManager.Instance.GetMyNoteList());
+        
+        InitNoteList();
     }
-    
 
-   
+    public void InitNoteList()
+    {
+        var myNoteList = MyNoteList.myNoteList.GetComponent<MyNoteList>();
+        var content = myNoteList.content;
 
-    
+        foreach (Transform child in content.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        var notelist = NetWorkManager.Instance.noteList;
+
+        foreach (var d in notelist)
+        {
+            Debug.Log(" note name :" + d);
+            var b = myNoteList.myNoteButton;
+            var o = Instantiate(b.gameObject);
+            o.transform.SetParent(MyNoteList.myNoteList.GetComponent<MyNoteList>().content, false);
+            o.GetComponent<MyNoteButton>().label.text = d;
+        }
+        GameEventMessage.SendEvent("MyNoteListDone");
+    }
 }

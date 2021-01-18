@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Doozy.Engine;
+using UnityEngine;
 
 public class ViewHome : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class ViewHome : MonoBehaviour
 #if UNITY_EDITOR
         OX_DataLoader.InitOriginalData();
         //OX_DataLoader.TestMyList();
+        NetWorkManager.Instance.LoadDataFromServer();
 #endif
     }
 

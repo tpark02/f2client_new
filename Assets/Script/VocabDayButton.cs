@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class VocabDayButton : MonoBehaviour
 {
     [SerializeField] public Text day;
-    private int nDay;
+    private int nDay = -1;
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnClickDayButton);
@@ -22,11 +22,12 @@ public class VocabDayButton : MonoBehaviour
     public void OnClickDayButton()
     {
         StatusBar.RecordPrevTitle((int) Title.VOCAB_DAY);
-        StatusBar.SetStatusTitle((int)Title.VOCAB);
+        StatusBar.SetStatusTitle((int)Title.VOCAB_LIST);
 
         ViewVocabList.viewVocabList.SetActive(true);
         //StartCoroutine(LoadVocabList(nDay));
         OX_DataLoader.InitVocabList(nDay);
+        BackButtonController.selectedVocabDay = nDay;
         ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(nDay);
     }
 

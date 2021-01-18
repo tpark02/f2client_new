@@ -12,6 +12,7 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
     Color32[] vocabPanelColorList = new Color32[2];
     private int currentColorIndex = 0;
     public string vocab = string.Empty;
+    [HideInInspector] public int vocabId = -1;
     void Start()
     {
         vocabPanelColorList[0] = new Color32(255, 255, 255, 150);
@@ -50,11 +51,13 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
             {
                 currentColorIndex = 1;
                 OX_DataLoader.AddToUserList(vocab);
+                NetWorkManager.Instance.ShowSelectNotePopup(vocabId);
             }
             else if (currentColorIndex == 1)
             {
                 currentColorIndex = 0;
                 OX_DataLoader.RemoveFromUserList(vocab);
+                NetWorkManager.Instance.RemoveMyVocab(vocabId);
             }
 
             vocabPanel.color = vocabPanelColorList[currentColorIndex];

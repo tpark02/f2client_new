@@ -84,7 +84,6 @@ public static class OX_DataLoader
 
     public static List<VocabData> vocablist = null;
     
-    public static bool isDoneLoadingVocab = false;
     public static int currentDay = 0;
     public static int eachDayVocabCount = 30;
     private static int vocabTestSize = 10;
@@ -178,6 +177,11 @@ public static class OX_DataLoader
             file.WriteLine(errorStr);
         }
 #endif
+    }
+
+    public static  void SetMyVocab()
+    {
+        
     }
     private static string ColorVocab(string e, string v)
     {

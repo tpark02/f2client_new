@@ -25,7 +25,7 @@ public class VocabResultButton : MonoBehaviour
         var d = OX_DataLoader.GetVocab(vocab.text);
         ViewVocabResultDetail.isDetailDone = false;
 
-        ViewVocabResultDetail.viewResultDetail.GetComponent<ViewVocabResultDetail>().SetVocabDetail(vocab.text
+        ViewVocabResultDetail.viewResultDetail.GetComponent<ViewVocabResultDetail>().SetVocabDetail(d.id, vocab.text
             , d.def
             , d.e1
             , d.t1

@@ -38,7 +38,7 @@ public class ViewVocabList : MonoBehaviour
 
         foreach (Transform c in content.transform)
         {
-            c.GetComponent<VocabButton>().favoriteToggle.IsOn = false;
+            //c.GetComponent<VocabButton>().favoriteToggle = false;
         }
 
         // init selected vocab scroll list
@@ -56,9 +56,24 @@ public class ViewVocabList : MonoBehaviour
         for (int i = 0; i < OX_DataLoader.eachDayVocabCount; i++)
         {
             var s = OX_DataLoader.GetVocabList(i);
-            content.transform.GetChild(i).GetComponent<VocabButton>().SetVocabButton(s.vocab);
+            var button = content.transform.GetChild(i).GetComponent<VocabButton>();
+
+            button.favoriteToggle.SetCheck(false);
+            button.favoriteToggle.vocabData = s;
+
+            button.SetVocabButton(s.vocab);
             content.transform.GetChild(i).gameObject.SetActive(true);
+
+            foreach (var myVocabData in NetWorkManager.Instance.myVocabDataList)
+            {
+                if (s.id == myVocabData.vocabId)
+                {
+                    button.favoriteToggle.SetCheck(true);
+                    break;
+                }
+            }
         }
+
         isListLoadingDone = true;
     }
 

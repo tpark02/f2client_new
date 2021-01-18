@@ -33,11 +33,12 @@ public class ViewVocabDetail : MonoBehaviour
         
         StatusBar.statusBar.GetComponent<StatusBar>().ResetSelectedVocabScrollPos();
     }
-    public void SetVocabDetail(string v, string d, string e1, string t1, string e2, string t2)
+    public void SetVocabDetail(int vocabId, string v, string d, string e1, string t1, string e2, string t2)
     {
         var deflist = d.Split(new string[] { "[t]" }, StringSplitOptions.None);
         vocab.text = v;
         vocabPanel.vocab = v;
+        vocabPanel.vocabId = vocabId;
 
         def.text = string.Empty;
         for (int i = 0; i < deflist.Length; i++)
@@ -54,8 +55,15 @@ public class ViewVocabDetail : MonoBehaviour
         
         vocabPanel.SetColor(false);
         
-        bool isVocabExist = UserDataManager.Instance.IsVocabExist(vocab.text);
-        if (isVocabExist)
+        //bool isVocabExist = UserDataManager.Instance.IsVocabExist(vocab.text);
+        //if (isVocabExist)
+        //{
+        //    vocabPanel.SetColor(true);
+        //}
+
+        bool isExist = NetWorkManager.Instance.IsVocabInMyNote(vocabId);
+
+        if (isExist)
         {
             vocabPanel.SetColor(true);
         }

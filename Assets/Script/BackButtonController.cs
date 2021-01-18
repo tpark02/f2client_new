@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class BackButtonController : MonoBehaviour
 {
+    public static int selectedVocabDay = -1;
     public static Action resetVocabListScrollPos = null;
     public static Action resetVocabDayScrollPos = null;
     [SerializeField] private GameObject homeButton = null;
@@ -37,7 +38,7 @@ public class BackButtonController : MonoBehaviour
         
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(false);
 
-        if (prevPage == (int) Title.VOCAB)      // sort button active or not
+        if (prevPage == (int) Title.VOCAB_LIST)      // sort button active or not
         {
             var bar = StatusBar.statusBar.GetComponent<StatusBar>();
             //bar.sortButton.transform.GetChild(0).GetComponent<Text>().text = "Sort List ";
@@ -68,6 +69,14 @@ public class BackButtonController : MonoBehaviour
 
         StatusBar.statusBar.GetComponent<StatusBar>().selectVocabScroll.SetActive(false);
         StatusBar.statusBar.GetComponent<StatusBar>().sortPanel.SetActive(false);
+
+        //NetWorkManager.Instance.GetMyVocabList("tpark3546@gmail.com");
+
+        if (prevPage == (int) Title.VOCAB_LIST)
+        {
+            //ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(selectedVocabDay);
+            NetWorkManager.Instance.ReloadVocabList("tpark3546@gmail.com", selectedVocabDay);
+        }
     }
 
     public void ShowHomeButton()

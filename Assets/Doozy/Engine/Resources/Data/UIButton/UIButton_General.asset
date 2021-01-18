@@ -39,3 +39,4 @@ MonoBehaviour:
   - MyNoteButton
   - MyVocabButton
   - AddNote
+  - NoteSelectButton

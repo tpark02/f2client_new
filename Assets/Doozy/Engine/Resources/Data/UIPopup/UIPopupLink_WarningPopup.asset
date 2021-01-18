@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cb74a60c88d47c59f00e35977b6d7b7, type: 3}
-  m_Name: ProcessorsSettings
+  m_Script: {fileID: 11500000, guid: 17215f689fb19554ab6b81c2308113df, type: 3}
+  m_Name: UIPopupLink_WarningPopup
   m_EditorClassIdentifier: 
-  RunFoldersProcessor: 0
-  RunDoozyAssetsProcessor: 0
+  PopupName: WarningPopup
+  Prefab: {fileID: 2275619172023314239, guid: c86c74a8789e70a4a89cd66d3f5e50a0, type: 3}

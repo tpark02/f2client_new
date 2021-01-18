@@ -41,7 +41,7 @@ public class MyVocabDetail : MonoBehaviour
         var deflist = d.Split(new string[] { "[t]" }, StringSplitOptions.None);
         vocab.text = v;
         vocabPanel.vocab = v;
-
+        
         def.text = string.Empty;
         for (int i = 0; i < deflist.Length; i++)
         {
@@ -62,5 +62,7 @@ public class MyVocabDetail : MonoBehaviour
         {
             vocabPanel.SetColor(true);
         }
+
+        // 여기에 나중에 add vocab DB에 넣는 기능 넣어줘야한다.
     }
 }
