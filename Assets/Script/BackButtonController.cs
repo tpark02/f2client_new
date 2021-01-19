@@ -38,7 +38,8 @@ public class BackButtonController : MonoBehaviour
         
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(false);
 
-        if (prevPage == (int) Title.VOCAB_LIST)      // sort button active or not
+        if (prevPage == (int) Title.VOCAB_LIST
+        || prevPage == (int) Title.MyVocabList)      // sort button active or not
         {
             var bar = StatusBar.statusBar.GetComponent<StatusBar>();
             //bar.sortButton.transform.GetChild(0).GetComponent<Text>().text = "Sort List ";
@@ -74,8 +75,16 @@ public class BackButtonController : MonoBehaviour
 
         if (prevPage == (int) Title.VOCAB_LIST)
         {
-            //ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(selectedVocabDay);
-            NetWorkManager.Instance.ReloadVocabList("tpark3546@gmail.com", selectedVocabDay);
+            ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(selectedVocabDay);
+            var bar = StatusBar.statusBar.GetComponent<StatusBar>();
+            bar.sortButton.transform.GetChild(0).GetComponent<Text>().text = "Sort List  ";
+        }
+
+        if (prevPage == (int) Title.MyVocabList)
+        {
+            MyVocabList.myVocabList.GetComponent<MyVocabList>().LoadVocabRoutine(OX_DataLoader.currentNoteName);
+            var bar = StatusBar.statusBar.GetComponent<StatusBar>();
+            bar.sortButton.transform.GetChild(0).GetComponent<Text>().text = "Sort List  ";
         }
     }
 

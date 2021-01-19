@@ -61,7 +61,7 @@ public class ViewVocabDetail : MonoBehaviour
         //    vocabPanel.SetColor(true);
         //}
 
-        bool isExist = NetWorkManager.Instance.IsVocabInMyNote(vocabId);
+        bool isExist = UserDataManager.Instance.IsVocabExist(vocabId);
 
         if (isExist)
         {

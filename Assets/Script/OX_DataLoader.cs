@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using Doozy.Engine;
 using UnityEditor;
 using UnityEngine;
@@ -83,7 +84,7 @@ public static class OX_DataLoader
         random = new System.Random(); // 난수 생성은 한번만 해야, 같은 숫자가 생성안된다. 참고 : https://crynut84.tistory.com/15
 
     public static List<VocabData> vocablist = null;
-    
+    public static string currentNoteName = string.Empty;
     public static int currentDay = 0;
     public static int eachDayVocabCount = 30;
     private static int vocabTestSize = 10;
@@ -506,7 +507,158 @@ public static class OX_DataLoader
         empty.vocab = "empty";
         return empty;
     }
+    
+    public static string GetVocabById(int n)
+    {
+        foreach (var d in originalData)
+        {
+            if ((int) d["id"] == n)
+                return (string) d["vocab"];
 
+        }
+        return string.Empty;
+    }
+
+    public static VocabData GetVocabDataByVocab(string s)
+    {
+        foreach (var d in originalData)
+        {
+            if (s.Equals((string) d["vocab"]))
+            {
+                VocabData v = new VocabData(-1
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty");
+                v.id = ((int)d["id"]);
+                v.vocab = CheckDataEmpty((string)d["vocab"]);
+                v.def = CheckDataEmpty((string)d["def"]);
+                v.e1 = CheckDataEmpty((string)d["e1"]);
+                v.t1 = CheckDataEmpty((string)d["t1"]);
+                v.e2 = CheckDataEmpty((string)d["e2"]);
+                v.t2 = CheckDataEmpty((string)d["t2"]);
+                v.sym = CheckDataEmpty((string)d["sym"]);
+                v.aym = CheckDataEmpty((string)d["aym"]);
+                v.type = CheckDataEmpty((string)d["ps"]);
+                //v.day = (i / eachDayVocabCount) + 1;
+                v.isUserCheck = false;
+
+                v.e1 = ColorVocab(v.e1.ToLower(), v.vocab);
+                v.e2 = ColorVocab(v.e2.ToLower(), v.vocab);
+
+                if (v.e1[0] != '<')
+                {
+                    v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
+                }
+
+                if (v.e2[0] != '<')
+                {
+                    v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
+                }
+
+                v.e1 = v.e1.Trim();
+                v.e2 = v.e2.Trim();
+                return v;
+            }
+        }
+        VocabData enpmtydata = new VocabData(-1
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty");
+
+        return enpmtydata;
+    }
+
+    public static VocabData GetVocabDataById(int n)
+    {
+
+        foreach (var d in originalData)
+        {
+            if ((int) d["id"] == n)
+            {
+                VocabData v = new VocabData(-1
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty"
+                    , "empty");
+                v.id = ((int)d["id"]);
+                v.vocab = CheckDataEmpty((string)d["vocab"]);
+                v.def = CheckDataEmpty((string)d["def"]);
+                v.e1 = CheckDataEmpty((string)d["e1"]);
+                v.t1 = CheckDataEmpty((string)d["t1"]);
+                v.e2 = CheckDataEmpty((string)d["e2"]);
+                v.t2 = CheckDataEmpty((string)d["t2"]);
+                v.sym = CheckDataEmpty((string)d["sym"]);
+                v.aym = CheckDataEmpty((string)d["aym"]);
+                v.type = CheckDataEmpty((string)d["ps"]);
+                //v.day = (i / eachDayVocabCount) + 1;
+                v.isUserCheck = false;
+
+                v.e1 = ColorVocab(v.e1.ToLower(), v.vocab);
+                v.e2 = ColorVocab(v.e2.ToLower(), v.vocab);
+
+                if (v.e1[0] != '<')
+                {
+                    v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
+                }
+
+                if (v.e2[0] != '<')
+                {
+                    v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
+                }
+
+                v.e1 = v.e1.Trim();
+                v.e2 = v.e2.Trim();
+                return v;
+            }
+
+        }
+
+        VocabData enpmtydata = new VocabData(-1
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty");
+
+        return enpmtydata;
+    }
+
+    public static VocabData GetEmptyVocabData()
+    {
+        VocabData enpmtydata = new VocabData(-1
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty"
+            , "empty");
+
+        return enpmtydata;
+    }
     public static void VocabTestShuffle()
     {
         int n = testList.Count;
@@ -616,21 +768,21 @@ public static class OX_DataLoader
         resultList.Add(d);
     }
 
-    public static void AddToUserList(string s)
+    public static void AddToUserList(int vocabId, string noteName)
     {
-        UserDataManager.Instance.AddUserStudyVocab(s);
+        UserDataManager.Instance.AddUserStudyVocab(vocabId, noteName);
 
         string filename = FileReadWrite.Instance.GetStudyVocabFileName();
         FileReadWrite.Instance.WriteUserData(filename);
     }
 
-    public static void RemoveFromUserList(string s)
+    public static void RemoveFromUserList(int vocabId)
     {
-        var isVocabExist = UserDataManager.Instance.IsVocabExist(s);
+        var isVocabExist = UserDataManager.Instance.IsVocabExist(vocabId);
         
         if (isVocabExist)
         {
-            UserDataManager.Instance.DeleteUserStudyVocab(s);
+            UserDataManager.Instance.DeleteUserStudyVocab(vocabId);
         }
 
         string filename = FileReadWrite.Instance.GetStudyVocabFileName();
@@ -640,13 +792,5 @@ public static class OX_DataLoader
     public static VocabData GetVocabList(int index)
     {
         return vocablist[index];
-    }
-
-    public static void TestMyList()
-    {
-        for (int i = 0; i < originalData.Count; i++)
-        {
-            AddToUserList(originalData[i]["vocab"].ToString());
-        }
     }
 }

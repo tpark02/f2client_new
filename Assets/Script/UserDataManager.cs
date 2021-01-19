@@ -4,55 +4,25 @@ using UnityEngine;
 
 public class UserDataManager : Singleton<UserDataManager>
 {
-    private float userSentenceFinalScore = 0f;
-    private float userOXFinalScore = 0f;
-    private int userOXScore = 0;
-    private int userSentenceScore = 0;
-    private Dictionary<int, OXUserData> oxProgressList = new Dictionary<int, OXUserData>();
-    private Dictionary<int, SentenceUserData> sentenceProgressList = new Dictionary<int, SentenceUserData>();
-    private Dictionary<string, string> userStudyVocabList = new Dictionary<string, string>();
-    private Dictionary<int, string> userSentenceList = new Dictionary<int, string>();
-
-    public void SetUserSentenceList(Dictionary<int, string> d)
-    {
-        userSentenceList = d;
-    }
-    public bool IsSentenceDataExist(int n)
-    {
-        if (userSentenceList.ContainsKey(n))
-        {
-            return true;
-        }
-        return false;
-    }
-    public void DeleteUserSentenceList(int n)
-    {
-        userSentenceList.Remove(n);
-    }
-    public void AddUserSentenceList(int n)
-    {
-        userSentenceList.Add(n, string.Empty);
-    }
-    public Dictionary<int, string> GetUserSentenceList()
-    {
-        return userSentenceList;
-    }
-    public void SetUserStudyVocabList(Dictionary<string, string> d)
-    {
-        userStudyVocabList = d;
-    }
-    public void DeleteUserStudyVocab(string s)
+    private Dictionary<int, string> userStudyVocabList = new Dictionary<int, string>();
+    private Dictionary<string, int> userNoteCount = new Dictionary<string, int>();
+    
+    //public void SetUserStudyVocabList(Dictionary<int, string> d)
+    //{
+    //    userStudyVocabList = d;
+    //}
+    public void DeleteUserStudyVocab(int s)
     {
         userStudyVocabList.Remove(s);
     }
-    public void AddUserStudyVocab(string s)
+    public void AddUserStudyVocab(int s, string noteName)
     {
         if (userStudyVocabList.ContainsKey(s) == false)
         {
-            userStudyVocabList.Add(s, string.Empty);
+            userStudyVocabList.Add(s, noteName);
         }
     }
-    public bool IsVocabExist(string s)
+    public bool IsVocabExist(int s)
     {
         if (userStudyVocabList.ContainsKey(s))
         {
@@ -60,150 +30,75 @@ public class UserDataManager : Singleton<UserDataManager>
         }
         return false;
     }
-    public Dictionary<string, string> GetUserStudyVocabList()
+    public Dictionary<int, string> GetUserStudyVocabList()
     {
         return userStudyVocabList;
     }
-    public OXUserData GetOXProgressListByIndex(int n)
+
+    public Dictionary<int, string> GetCurrentNoteVocabList()
     {
-        return oxProgressList[n];
+        Dictionary<int, string> l = new Dictionary<int, string>();
+
+        foreach (var v in userStudyVocabList)
+        {
+            if (OX_DataLoader.currentNoteName.Equals(v.Value))
+            {
+                l.Add(v.Key, v.Value);
+            }
+        }
+
+        return l;
+    }
+    public void InitUserNote(string noteName)
+    {
+        if (userNoteCount.ContainsKey(noteName) == false)
+        {
+            userNoteCount.Add(noteName, 0);
+        }
     }
 
-    public int OxProgressListTrueCount()
+    public void InitUserNoteCount()
     {
-        return oxProgressList.Count(i => i.Value.isUnlock.Equals("true"));
+        foreach (var v in userStudyVocabList)
+        {
+            if (userNoteCount.ContainsKey(v.Value))
+            {
+                userNoteCount[v.Value]++;
+            }
+        }
     }
 
-    public int SentenceProgressListTrueCount()
+    public void AddMyVocabUserNote(string noteName)
     {
-        return sentenceProgressList.Count(i => i.Value.isUnlock.Equals("true"));
-    }
-    public SentenceUserData GetSentenceProgressListByIndex(int n)
-    {
-        return sentenceProgressList[n];
-    }
-    public bool SetOXNextDayUnlock(int n)
-    {
-        if (n <= 0)
+        if (userNoteCount.ContainsKey(noteName))
         {
-            Debug.Log("<color=red>index is 0 !!!<color>");
-            return false;
+            userNoteCount[noteName]++;
         }
-        if (n >= 20)
-        {
-            Debug.Log("<color=red>All days are done !!!</color>");
-            return false;
-        }
-        var d = oxProgressList[n];
-        if (d.isCheck.Equals("true"))
-        {
-            oxProgressList[n + 1].isUnlock = "true";
-            return true;
-        }
-        return false;
-    }
-    public bool SetSentenceNextDayUnlock(int n)
-    {
-        if (n <= 0)
-        {
-            Debug.Log("<color=red>index is 0 !!!<color>");
-            return false;
-        }
-        if (n >= 20)
-        {
-            Debug.Log("<color=red>All days are done !!!</color>");
-            return false;
-        }
-        var d = sentenceProgressList[n];
-        if (d.isCheck.Equals("true"))
-        {
-            sentenceProgressList[n + 1].isUnlock = "true";
-            return true;
-        }
-        return false;
-    }
-    public void SetUserOXDayResult(int n, float f)
-    {
-        var d = oxProgressList[n];
-        if (f >= 70f)
-        {
-            //d.isUnlock = "true";
-            d.isCheck= "true";            
-        }
-        else
-        {
-            //d.isUnlock = "false";
-            d.isCheck = "false";
-        }
-    }
-    public void SetUserSentenceDayResult(int n, float f)
-    {
-        var d = sentenceProgressList[n];
-        if (f >= 70f)
-        {
-            //d.isUnlock = "true";
-            d.isCheck = "true";
-        }
-        else
-        {
-            //d.isUnlock = "false";
-            d.isCheck = "false";
-        }
-    }
-    public void SetOXProgressList(Dictionary<int, OXUserData> list)
-    {
-        oxProgressList = list;
-    }
-    public void SetSentenceProgressList(Dictionary<int, SentenceUserData> list)
-    {
-        sentenceProgressList = list;
-    }
-    public void AddUserOXProgressList(int n, OXUserData d)
-    {
-        oxProgressList.Add(n, d);
-    }
-    public void AddSentenceUserProgressList(int n, SentenceUserData d)
-    {
-        sentenceProgressList.Add(n, d);
-    }
-    public Dictionary<int, OXUserData> GetUserOXProgressList()
-    {
-        return oxProgressList;
-    }
-    public Dictionary<int, SentenceUserData> GetUserSentenceProgressList()
-    {
-        return sentenceProgressList;
-    }
-    public void SetUserOXScore(int n)
-    {
-        userOXScore = Mathf.Max(n, userOXScore);
     }
 
-    public void SetUserSentenceScore(int n)
+    public void RemoveMyVocabUserNote(int vocabId)
+    { 
+        if (userStudyVocabList.ContainsKey(vocabId))
+        {
+            var noteName = userStudyVocabList[vocabId];
+            if (userNoteCount.ContainsKey(noteName))
+            {
+                userNoteCount[noteName]--;
+            }
+        }
+    }
+    public int GetNoteCount(string s)
     {
-        userSentenceScore = Mathf.Max(n, userSentenceScore);
+        if (userNoteCount.ContainsKey(s))
+        {
+            return userNoteCount[s];
+        }
+
+        return -1;
     }
 
-    public void IncreaseUserOXScore()
+    public Dictionary<string, int> GetNoteList()
     {
-        userOXScore++;
-    }
-
-    public void IncreaseUserSentenceScore()
-    {
-        userSentenceScore++;
-    }
-
-    public void SetUserOXFinalScore(float f)
-    {
-        userOXFinalScore = f;
-    }
-    public void SetUserSentenceFinalScore(float f)
-    {
-        userSentenceFinalScore = f;
-    }
-    public float GetUserOXFinalScore()
-    {
-        return userOXFinalScore;
+        return userNoteCount;
     }
 }

@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Doozy.Engine;
 using Doozy.Engine.UI;
 using SimpleJSON;
@@ -19,12 +21,23 @@ public struct MyVocabData
 
 public class NetWorkManager : Singleton<NetWorkManager>
 {
+    private string serverURL = "http://localhost:3000/";
     private WWWForm form = null;
     private UnityWebRequest www = null;
-    private bool isLoadingDone = false;
-    private bool isNoteListDone = false;
-    [HideInInspector] public List<string> noteList = new List<string>();
-    [HideInInspector] public List<MyVocabData> myVocabDataList = new List<MyVocabData>();
+    public bool isLoadingDone = false;
+    public bool isNoteListDone = false;
+    public bool isJsonDone = false;
+    private string userEmail = "tpark3546@gmail.com";
+    private string vocablistUrl = "getMyVocabList";
+    private string noteListUrl = "getMyNotes";
+    private string addVocabUrl = "addMyVocab";
+    private string removeVocabUrl = "removeMyVocab";
+    private string createNewNoteUrl = "createNewNote";
+
+    private string recvData = string.Empty;
+    
+    //public List<MyVocabData> myVocabDataList = new List<MyVocabData>();
+    //public List<string> noteList = new List<string>();
     //[HideInInspector] public string selectedNote = string.Empty;
     public void Awake()
     {
@@ -36,6 +49,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
     }
     public void ShowWarningPopup(string msg)
     {
+        UIPopupManager.ClearQueue();
         var p = UIPopupManager.GetPopup("WarningPopup");
         if (p == null)
         {
@@ -52,58 +66,29 @@ public class NetWorkManager : Singleton<NetWorkManager>
 
     #region My Vocab Functions
 
-    /// <summary>
-    /// Reload Vocab List
-    /// </summary>
-    public void ReloadVocabList(string userid, int day)
-    {
-        StartCoroutine(ReloadVocabListCo(userid, day));
-    }
-
-    public IEnumerator ReloadVocabListCo(string userid, int day)
-    {
-        StartCoroutine(GetMyVocabListCo(userid));
-        yield return new WaitWhile(() =>
-        {
-            return isLoadingDone == false;
-        });
-        ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(day);
-        yield return new WaitWhile(() =>
-        {
-            return ViewVocabList.isListLoadingDone == false;
-        });
-        GameEventMessage.SendEvent("ReloadVocabListDone");
-    }
+   
     /// <summary>
     /// add vocab to the note 
     /// </summary>
     /// <param name="noteName"></param>
     /// <param name="vocabIndex"></param>
-    public void SetMyVocab(string noteName, int vocabIndex)
+    public void AddMyVocab(string noteName, int vocabIndex)
     {
-        StartCoroutine(SetMyVocabCo(noteName, vocabIndex));
+        StartCoroutine(AddMyVocabCo(noteName, vocabIndex));
     }
-    public IEnumerator SetMyVocabCo(string noteName, int vocabIndex)
+    public IEnumerator AddMyVocabCo(string noteName, int vocabIndex)
     {
-        form = new WWWForm();
-        form.AddField("userid", "tpark3546@gmail.com");
-        form.AddField("noteName", noteName);
-        form.AddField("vocab_index", vocabIndex);
+        WWWForm packet = new WWWForm();
+        packet.AddField("userid", userEmail);
+        packet.AddField("noteName", noteName);
+        packet.AddField("vocab_index", vocabIndex);
 
-        www = UnityWebRequest.Post("http://localhost:3000/setMyVocab", form);
-        yield return www.Send();
+        StartCoroutine(MesseageLoop(addVocabUrl, packet, RecvPacket));
 
-        if (www.isNetworkError)
+        yield return new WaitWhile(() =>
         {
-            Debug.Log(www.error);
-            //Debug.Log("<color=red> set vocab failed !</color>");
-            ShowWarningPopup("set vocab failed !");
-        }
-        else
-        {
-            Debug.Log(www.downloadHandler.text);
-            Debug.Log("<color=yellow> set vocab success !</color>");
-        }
+            return false == isLoadingDone;
+        });
     }
     /// <summary>
     /// remove vocab from a selected note
@@ -116,135 +101,24 @@ public class NetWorkManager : Singleton<NetWorkManager>
 
     public IEnumerator RemoveMyVocabCo(int vocabId)
     {
-        form = new WWWForm();
-        form.AddField("userid", "tpark3546@gmail.com");
-        form.AddField("vocab_index", vocabId);
+        WWWForm packet = new WWWForm();
+        packet.AddField("userid", "tpark3546@gmail.com");
+        packet.AddField("vocab_index", vocabId);
+        StartCoroutine(MesseageLoop(removeVocabUrl, packet, RecvPacket));
 
-        www = UnityWebRequest.Post("http://localhost:3000/removeMyVocab", form);
-        yield return www.Send();
-
-        if (www.isNetworkError)
+        yield return new WaitWhile(() =>
         {
-            Debug.Log(www.error);
-            ShowWarningPopup("remove vocab failed !");
-        }
-        else
-        {
-            Debug.Log(www.downloadHandler.text);
-            Debug.Log("<color=yellow> remove vocab success !</color>");
-        }
+            return false == isLoadingDone;
+        });
     }
 
-    /// <summary>
-    /// Get My Vocab List
-    /// </summary>
-    public void GetMyVocabList(string userid)
-    {
-        StartCoroutine(GetMyVocabListCo(userid));
-    }
-
-    public IEnumerator GetMyVocabListCo(string userid)
-    {
-        isLoadingDone = false;
-        form = new WWWForm();
-        form.AddField("userid", "tpark3546@gmail.com");
-
-        www = UnityWebRequest.Post("http://localhost:3000/getMyVocabList", form);
-        yield return www.Send();
-
-        if (www.isNetworkError)
-        {
-            isLoadingDone = true;
-            Debug.Log(www.error);
-            ShowWarningPopup("get my vocab list failed !");
-        }
-        else
-        {
-            Debug.Log(www.downloadHandler.text);
-            var data = JSON.Parse(www.downloadHandler.text);
-
-            if (data.Count <= 0)
-            {
-                Debug.Log("<color=red> there are no vocabs list.");
-            }
-            else
-            {
-                myVocabDataList.Clear();
-                foreach (var o in data)
-                {
-                    string name = o.Value["note_name"];
-                    int vocabId = o.Value["vocab_index"];
-
-                    MyVocabData d = new MyVocabData(vocabId, name);
-                    myVocabDataList.Add(d);
-                    yield return null;
-                }
-                Debug.Log("<color=yellow> get my vocab list success !</color>");
-            }
-            isLoadingDone = true;
-
-        }
-    }
     #endregion
-    public void LoadDataFromServer()
-    {
-        StartCoroutine(LoadDataFromServerCo());
-    }
-
-    public IEnumerator LoadDataFromServerCo()
-    {
-        
-        StartCoroutine(GetMyVocabListCo("tpark3546@gmail.com"));
-        yield return new WaitWhile(() =>
-        {
-            return isLoadingDone == false;
-        });
-        StartCoroutine(GetMyNoteListCo());
-        yield return new WaitWhile(() =>
-        {
-            return isLoadingDone == false;
-        });
-        GameEventMessage.SendEvent("PrepareDataDone");
-    }
-    public IEnumerator GetMyNoteListCo()
-    {
-        isNoteListDone = false;
-        form = new WWWForm();
-        form.AddField("userid", "tpark3546@gmail.com");
-        www = UnityWebRequest.Post("http://localhost:3000/getMyNotes", form);
-        yield return www.Send();
-
-        if (www.isNetworkError)
-        {
-            Debug.Log(www.error);
-            isNoteListDone = true;
-            ShowWarningPopup("get my note list failed !");
-        }
-        else
-        {
-            Debug.Log(www.downloadHandler.text);
-            var data = JSON.Parse(www.downloadHandler.text);
-            if (data.Count <= 0)
-            {
-                Debug.Log("<color=yellow> there are no notes. create a new note</color>");
-            }
-            else
-            {
-                noteList.Clear();
-                foreach (var d in data)
-                {
-                    noteList.Add(d.Value["note_name"]);
-                    yield return null;
-                }
-                Debug.Log("<color=yellow>get my note list success !</color>");
-            }
-            isNoteListDone = true;
-        }
-    }
+    
+   
 
     public IEnumerator DeleteMyNote(string noteName)
     {
-        form = new WWWForm();
+        WWWForm packet = new WWWForm();
         form.AddField("userid", "tpark@gmail.com");
         form.AddField("noteName", noteName);
 
@@ -266,29 +140,19 @@ public class NetWorkManager : Singleton<NetWorkManager>
 
     public IEnumerator CreateNewNote(string newNoteName)
     {
-        form = new WWWForm();
-        form.AddField("userid", "tpark3546@gmail.com");
-        form.AddField("newNoteName", newNoteName);
-        
-        www = UnityWebRequest.Post("http://localhost:3000/createNewNote", form);
-        yield return www.Send();
-
-        if (www.isNetworkError)
+        WWWForm packet = new WWWForm();
+        packet.AddField("userid", userEmail);
+        packet.AddField("newNoteName", newNoteName);
+        StartCoroutine(MesseageLoop(createNewNoteUrl, packet, RecvPacket));
+        yield return new WaitWhile(() =>
         {
-            Debug.Log(www.error);
-            ShowWarningPopup("create a new note failed !");
-        }
-        else
-        {
-            Debug.Log(www.downloadHandler.text);
-            var data = JSON.Parse(www.downloadHandler.text);
-            Debug.Log("create new note result : " + data["result"]);
-        }
+            return false == isLoadingDone;
+        });
     }
 
     public IEnumerator RenameMyNote(string newNoteName)
     {
-        form = new WWWForm();
+        WWWForm packet = new WWWForm();
         form.AddField("userid", "tpark@gmail.com");
         form.AddField("newNoteName", newNoteName);
 
@@ -321,16 +185,95 @@ public class NetWorkManager : Singleton<NetWorkManager>
         UIPopupManager.ShowPopup(p, p.AddToPopupQueue, false, "Popup");
     }
 
-    public bool IsVocabInMyNote(int vocabId)
+    public IEnumerator GetMyNoteList()
     {
-        foreach (var myVocabData in myVocabDataList)
+        WWWForm packet = new WWWForm();
+        packet.AddField("userid", userEmail);
+        StartCoroutine(MesseageLoop(noteListUrl, packet, RecvPacket));
+        yield return new WaitWhile(() =>
         {
-            if (myVocabData.vocabId == vocabId)
-            {
-                return true;
-            }
+            return false == isLoadingDone;
+        });
+        UnPack((int)PacketType.MY_NOTE_LIST);
+    }
+    public IEnumerator GetVocabList()
+    {
+        WWWForm packet = new WWWForm();
+        packet.AddField("userid", userEmail);
+        StartCoroutine(MesseageLoop(vocablistUrl, packet, RecvPacket));
+        yield return new WaitWhile(() =>
+        {
+            return false == isLoadingDone;
+        });
+        UnPack((int)PacketType.MY_VOCAB_LIST);
+    }
+
+    public void UnPack(int type)
+    {
+        var data = JSON.Parse(recvData);
+        while (data == null)
+        {
+            Debug.Log("recvData is null.");
+            return;
         }
 
-        return false;
+        switch (type)
+        {
+            case (int)PacketType.MY_VOCAB_LIST:
+                SetMyVocabList(data);
+                break;
+            case (int)PacketType.MY_NOTE_LIST:
+                SetMyNoteList(data);
+                break;
+        }
+    }
+
+    public void SetMyVocabList(JSONNode data)
+    {
+        isJsonDone = false;
+        //myVocabDataList.Clear();
+        foreach (var d in data)
+        {
+            MyVocabData vocabData = new MyVocabData(d.Value["vocab_index"]
+                , d.Value["note_name"]);
+            //myVocabDataList.Add(vocabData);
+            UserDataManager.Instance.AddUserStudyVocab(vocabData.vocabId, vocabData.notename);
+        }
+        isJsonDone = true;
+    }
+
+    public void SetMyNoteList(JSONNode data)
+    {
+        isJsonDone = false;
+        //noteList.Clear();
+        foreach (var d in data)
+        {
+            //noteList.Add(d.Value["note_name"]);
+            UserDataManager.Instance.InitUserNote(d.Value["note_name"]);
+        }
+        isJsonDone = true;
+    }
+    public void RecvPacket(string data)
+    {
+        recvData = data;
+    }
+    public IEnumerator MesseageLoop(string url, WWWForm packet, Action<string> recvCallBack)
+    {
+        isLoadingDone = false;
+        www = UnityWebRequest.Post(serverURL + url, packet);
+        yield return www.Send();
+
+        if (www.isNetworkError)
+        {
+            Debug.Log(www.error);
+            isLoadingDone = true;
+        }
+        else
+        {
+            Debug.Log(www.downloadHandler.text);
+            string data = www.downloadHandler.text;
+            recvCallBack(data);
+            isLoadingDone = true;
+        }
     }
 }

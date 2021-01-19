@@ -15,16 +15,14 @@ public class MyNoteButton : MonoBehaviour
     {
         StatusBar.RecordPrevTitle((int)Title.MyNoteList);
         StatusBar.SetStatusTitle((int)Title.MyVocabList);
-
+        StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.SetActive(false);
         LoadVocabList();
     }
     private void LoadVocabList()
     {
-        //OX_DataLoader.InitVocabList(d);
-
-        //ViewVocabTest.viewVocabTest.GetComponent<ViewVocabTest>().LoadTestList(d);
+        MyVocabList.myVocabList.GetComponent<MyVocabList>().LoadVocabRoutine(label.text);
     }
-    void SetNoteName(string s)
+    public void SetNoteName(string s)
     {
         label.text = s;
     }

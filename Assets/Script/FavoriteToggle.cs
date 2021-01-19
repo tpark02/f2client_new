@@ -25,12 +25,19 @@ public class FavoriteToggle : MonoBehaviour
     }
     public void ToggleOn()
     {
+        SelectNotePopup.toggleOffCallBack = () =>
+        {
+            isOn = false;
+            check.SetActive(false);
+        };
         NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id);
     }
 
     public void ToggleOff()
     {
+        UserDataManager.Instance.RemoveMyVocabUserNote(vocabData.id);
         NetWorkManager.Instance.RemoveMyVocab(vocabData.id);
+        OX_DataLoader.RemoveFromUserList(vocabData.id);
     }
 
     public void SetCheck(bool isActive)

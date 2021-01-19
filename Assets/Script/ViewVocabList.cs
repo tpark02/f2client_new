@@ -41,6 +41,8 @@ public class ViewVocabList : MonoBehaviour
             //c.GetComponent<VocabButton>().favoriteToggle = false;
         }
 
+        StatusBar.sortAlphabeticallyCallBack = SortAlphabetically;
+        StatusBar.sortByTypeCallBack = SortByType;
         // init selected vocab scroll list
         InitSelectVocabScrollListCallBack();
     }
@@ -64,9 +66,9 @@ public class ViewVocabList : MonoBehaviour
             button.SetVocabButton(s.vocab);
             content.transform.GetChild(i).gameObject.SetActive(true);
 
-            foreach (var myVocabData in NetWorkManager.Instance.myVocabDataList)
+            foreach (var data in UserDataManager.Instance.GetUserStudyVocabList())
             {
-                if (s.id == myVocabData.vocabId)
+                if (s.id == data.Key)
                 {
                     button.favoriteToggle.SetCheck(true);
                     break;

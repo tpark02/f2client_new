@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class SelectNotePopup : MonoBehaviour
 {
+    public static Action toggleOffCallBack = null;
     public static Action closePopupCallBack = null;
     [SerializeField] public Transform content;
     [SerializeField] public NoteSelectButton selectVocabButton;
@@ -15,19 +16,27 @@ public class SelectNotePopup : MonoBehaviour
     }
     public void InitPopup()
     {
-        var notelist = NetWorkManager.Instance.noteList;
+        var notelist = UserDataManager.Instance.GetNoteList();
         foreach (var d in notelist)
         {
             var o = Instantiate(selectVocabButton);
             o.transform.SetParent(content, false);
-            o.GetComponent<NoteSelectButton>().label.text = d;
+            o.GetComponent<NoteSelectButton>().label.text = d.Key;
             o.GetComponent<NoteSelectButton>().vocabId = vocabId;
         }
 
-        closePopupCallBack = ClosePopup;
+        closePopupCallBack = () =>
+        {
+            UIPopupManager.ClearQueue();
+        };
     }
     public void ClosePopup()
     {
+        if (toggleOffCallBack != null)
+        {
+            toggleOffCallBack();
+            toggleOffCallBack = null;
+        }
         UIPopupManager.ClearQueue();
     }
 }

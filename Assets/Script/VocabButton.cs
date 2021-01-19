@@ -29,13 +29,18 @@ public class VocabButton : MonoBehaviour
         StatusBar.RecordPrevTitle((int)Title.VOCAB_LIST);
         StatusBar.SetStatusTitle((int)Title.VOCAB_DETAIL);
 
-        //StartCoroutine(LoadVocabDetail());
-        LoadVocabDetail();
+        StartCoroutine(NetWorkManager.Instance.GetVocabList());
+
+        StartCoroutine(LoadVocabDetail());
     }
 
-    private void LoadVocabDetail()
+    private IEnumerator LoadVocabDetail()
     {
-        ViewVocabDetail.viewVocabDetail.SetActive(true);
+        yield return new WaitWhile(() =>
+        {
+            return false == NetWorkManager.Instance.isLoadingDone;
+        });
+
         var d = OX_DataLoader.GetVocab(vocab.text);
         ViewVocabDetail.isDetailDone = false;
         
@@ -47,13 +52,17 @@ public class VocabButton : MonoBehaviour
             , d.t2);
         
         ViewVocabDetail.isDetailDone = true;
-        //yield return new WaitWhile(() =>
-        //{
-        //    return ViewVocabDetail.isDetailDone == false;
-        //});
-        
+
+        yield return new WaitWhile(() =>
+        {
+            return ViewVocabDetail.isDetailDone == false;
+        });
+
+
         StatusBar.statusBar.GetComponent<StatusBar>().sortPanel.SetActive(false);
 
-        //GameEventMessage.SendEvent("VocabDetailDone");
+        //ViewVocabDetail.viewVocabDetail.SetActive(true);
+
+        GameEventMessage.SendEvent("LoadingVocabListDone");
     }
 }

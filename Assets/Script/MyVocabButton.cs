@@ -8,15 +8,17 @@ using UnityEngine.UI;
 public class MyVocabButton : MonoBehaviour
 {
     [SerializeField] public Text vocab;
-    [SerializeField] public UIToggle favoriteToggle;
+    [HideInInspector] public OX_DataLoader.VocabData vocabData;
+    [SerializeField] public FavoriteToggle favoriteToggle;
     void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnClickVocabButton);
     }
 
-    public void SetVocabButton(string v)
+    public void SetVocabButton(string v, OX_DataLoader.VocabData data)
     {
         vocab.text = v;
+        vocabData = data;
     }
 
     public void OnClickVocabButton()
@@ -24,30 +26,30 @@ public class MyVocabButton : MonoBehaviour
         StatusBar.RecordPrevTitle((int)Title.MyVocabList);
         StatusBar.SetStatusTitle((int)Title.MyVocabDetail);
 
-        //StartCoroutine(LoadVocabDetail());
+        StartCoroutine(LoadVocabDetail());
     }
 
-    //private IEnumerator LoadVocabDetail()
-    //{
-    //    MyVocabDetail.myVocabDetail.SetActive(true);
-    //    var d = OX_DataLoader.GetVocab(vocab.text);
-    //    MyVocabDetail.isDetailDone = false;
+    private IEnumerator LoadVocabDetail()
+    {
+        MyVocabDetail.myVocabDetail.SetActive(true);
+        
+        MyVocabDetail.isDetailDone = false;
 
-    //    MyVocabDetail.myVocabDetail.GetComponent<MyVocabDetail>().SetVocabDetail(vocab.text
-    //        , d.def
-    //        , d.e1
-    //        , d.t1
-    //        , d.e2
-    //        , d.t2);
+        MyVocabDetail.myVocabDetail.GetComponent<MyVocabDetail>().SetVocabDetail(vocabData, vocabData.vocab
+            , vocabData.def
+            , vocabData.e1
+            , vocabData.t1
+            , vocabData.e2
+            , vocabData.t2);
 
-    //    MyVocabDetail.isDetailDone = true;
-    //    yield return new WaitWhile(() =>
-    //    {
-    //        return MyVocabDetail.isDetailDone == false;
-    //    });
+        MyVocabDetail.isDetailDone = true;
+        yield return new WaitWhile(() =>
+        {
+            return MyVocabDetail.isDetailDone == false;
+        });
 
-    //    StatusBar.statusBar.GetComponent<StatusBar>().sortPanel.SetActive(false);
+        StatusBar.statusBar.GetComponent<StatusBar>().sortPanel.SetActive(false);
 
-    //    GameEventMessage.SendEvent("MyVocabDetailDone");
-    //}
+        GameEventMessage.SendEvent("MyVocabDetailDone");
+    }
 }

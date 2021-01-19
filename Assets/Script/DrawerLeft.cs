@@ -121,7 +121,7 @@ public class DrawerLeft : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        var notelist = NetWorkManager.Instance.noteList;
+        var notelist = UserDataManager.Instance.GetNoteList();
 
         foreach (var d in notelist)
         {
@@ -129,7 +129,7 @@ public class DrawerLeft : MonoBehaviour
             var b = myNoteList.myNoteButton;
             var o = Instantiate(b.gameObject);
             o.transform.SetParent(MyNoteList.myNoteList.GetComponent<MyNoteList>().content, false);
-            o.GetComponent<MyNoteButton>().label.text = d;
+            o.GetComponent<MyNoteButton>().SetNoteName(d.Key);
         }
         GameEventMessage.SendEvent("MyNoteListDone");
     }

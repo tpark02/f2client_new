@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Doozy.Engine;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,13 +13,14 @@ public class MyVocabList : MonoBehaviour
 
     public static Action showBackButtonCallBack = null;
     public static Action InitSelectVocabScrollListCallBack = null;
-    public static Action<List<string>> InitSelectVocabBySortTypeCallBack = null;
-
+    //public static Action<List<string>> InitSelectVocabBySortTypeCallBack = null;
+    public static Action<Dictionary<string, OX_DataLoader.VocabData>> InitSelectMyVocabBySortTypeCallBack = null;
     public static GameObject myVocabList;
     public static bool isListLoadingDone = false;
 
     private Vector3 startPos;
-    private int selectedDay = 0;        // for sorting function
+    //private int selectedDay = 0;        // for sorting function
+    private string selectedNoteName = string.Empty;
 
     void Start()
     {
@@ -38,46 +40,47 @@ public class MyVocabList : MonoBehaviour
 
         ResetScrollPos();
 
+        StatusBar.sortAlphabeticallyCallBack = SortAlphabetically;
+        StatusBar.sortByTypeCallBack = SortByType;
         // init selected vocab scroll list
         InitSelectVocabScrollListCallBack();
     }
-    //public void LoadVocabRoutine(int d)
-    //{
-    //    selectedDay = d;
-    //    OX_DataLoader.currentDay = d;
 
-    //    isListLoadingDone = false;
+    public void LoadVocabRoutine(string noteName)
+    {
+        selectedNoteName = noteName;
+        OX_DataLoader.currentNoteName = noteName;
 
-    //    int i = 0;
-    //    var list = UserDataManager.Instance.GetUserStudyVocabList();
-    //    foreach (var s in list)
-    //    {
-    //        var vocab = s.Key;
-    //        content.transform.GetChild(i).GetComponent<MyVocabButton>().SetVocabButton(vocab);
-    //        content.transform.GetChild(i).gameObject.SetActive(true);
-    //        i++;
-    //    }
+        isListLoadingDone = false;
 
-    //    isListLoadingDone = true;
-    //}
+        var list = UserDataManager.Instance.GetUserStudyVocabList();
+        for (int j = 0; j < OX_DataLoader.eachDayVocabCount; j++)
+        {
+            var c = content.transform.GetChild(j).GetComponent<MyVocabButton>();
+            //c.SetVocabButton("EMPTY", OX_DataLoader.GetEmptyVocabData());
+            c.gameObject.SetActive(false);
+            c.favoriteToggle.SetCheck(false);
+        }
 
-    //public void ReloadVocabList()
-    //{
-    //    for (int j = 0; j < OX_DataLoader.eachDayVocabCount; j++)
-    //    {
-    //        content.transform.GetChild(j).GetComponent<MyVocabButton>().SetVocabButton("");
-    //    }
+        int i = 0;
+        foreach (var s in list)
+        {
+            if (s.Value.Equals(noteName) == false)
+            {
+                continue;
+            }
+            OX_DataLoader.VocabData data = OX_DataLoader.GetVocabDataById(s.Key);
+            var c = content.transform.GetChild(i).GetComponent<MyVocabButton>();
+            c.favoriteToggle.vocabData = data;
+            c.SetVocabButton(data.vocab, data);
+            c.gameObject.SetActive(true);
+            c.favoriteToggle.SetCheck(true);
+            i++;
+        }
+        InitSelectVocabScrollListCallBack();
+        isListLoadingDone = true;
+    }
 
-    //    int i = 0;
-    //    var list = UserDataManager.Instance.GetUserStudyVocabList();
-    //    foreach (var s in list)
-    //    {
-    //        var vocab = s.Key;
-    //        content.transform.GetChild(i).GetComponent<MyVocabButton>().SetVocabButton(vocab);
-    //        content.transform.GetChild(i).gameObject.SetActive(true);
-    //        i++;
-    //    }
-    //}
     public void ResetScrollPos()
     {
         content.localPosition = new Vector3(startPos.x, startPos.y, 0f);
@@ -91,27 +94,36 @@ public class MyVocabList : MonoBehaviour
 
         for (int i = 0; i < eachDayVocabCount; i++)
         {
-            content.transform.GetChild(i).GetComponent<MyVocabButton>().SetVocabButton("");
-            content.transform.GetChild(i).gameObject.SetActive(false);
+            var c = content.transform.GetChild(i);
+            //c.GetComponent<MyVocabButton>().SetVocabButton("", OX_DataLoader.GetEmptyVocabData());
+            //c.GetComponent<MyVocabButton>().favoriteToggle.SetCheck(false);
+            c.gameObject.SetActive(false);
         }
 
-        List<string> list = new List<string>();
+        Dictionary<string, OX_DataLoader.VocabData> list = new Dictionary<string, OX_DataLoader.VocabData>();
 
-        var mylist = UserDataManager.Instance.GetUserStudyVocabList();
+        //var mylist = UserDataManager.Instance.GetUserStudyVocabList();
+        var mylist = UserDataManager.Instance.GetCurrentNoteVocabList();
+        OX_DataLoader.VocabData vData;
         foreach (var s in mylist)
         {
-            list.Add(s.Key);
+            vData = OX_DataLoader.GetVocabDataById(s.Key);
+            list.Add(vData.vocab, vData);
         }
 
-        list.Sort();
+        var l = list.Keys.ToList();
+        l.Sort();
 
-        for (int i = 0; i < list.Count; i++)
+        for (int j = 0; j < l.Count; j++)
         {
-            content.transform.GetChild(i).gameObject.SetActive(true);
-            content.transform.GetChild(i).GetComponent<MyVocabButton>().SetVocabButton(list[i]);
+            var c = content.transform.GetChild(j);
+            c.gameObject.SetActive(true);
+            c.GetComponent<MyVocabButton>().SetVocabButton(l[j], list[l[j]]);
+            c.GetComponent<MyVocabButton>().favoriteToggle.SetCheck(true);
         }
 
-        InitSelectVocabBySortTypeCallBack(list);
+        //InitSelectVocabBySortTypeCallBack(list);
+        InitSelectMyVocabBySortTypeCallBack(list);
         isListLoadingDone = true;
     }
     // Sort By Type
@@ -122,37 +134,46 @@ public class MyVocabList : MonoBehaviour
 
         for (int j = 0; j < eachDayVocabCount; j++)
         {
-            content.transform.GetChild(j).GetComponent<MyVocabButton>().SetVocabButton("");
+            var c = content.transform.GetChild(j).GetComponent<MyVocabButton>();
+            //c.SetVocabButton("", OX_DataLoader.GetEmptyVocabData());
+            //c.GetComponent<MyVocabButton>().favoriteToggle.SetCheck(false);
+            c.gameObject.SetActive(false);
         }
 
-        List<string> list = new List<string>();
+        Dictionary<string, OX_DataLoader.VocabData> list = new Dictionary<string, OX_DataLoader.VocabData>();
 
         int i = 0;
-        var mylist = UserDataManager.Instance.GetUserStudyVocabList();
+        //var mylist = UserDataManager.Instance.GetUserStudyVocabList();
+        var mylist = UserDataManager.Instance.GetCurrentNoteVocabList();
+        OX_DataLoader.VocabData vData;
         foreach (var s in mylist)
         {
-            var d = OX_DataLoader.GetVocab(s.Key);
-            var psList = d.type.Split(new string[] { ".:" }, StringSplitOptions.None);
+            vData = OX_DataLoader.GetVocabDataById(s.Key);
+            var psList = vData.type.Split(new string[] { ".:" }, StringSplitOptions.None);
             foreach(var p in psList)
             {
                 if (p.Equals(type))
                 {
-                    list.Add(s.Key);
+                    list.Add(vData.vocab, vData);
                     break;
                 }
             }
-
             i++;
         }
-        list.Sort();
 
-        for (int j = 0; j < list.Count; j++)
+        var l = list.Keys.ToList();
+        l.Sort();
+       
+        for (int j = 0; j < l.Count; j++)
         {
-            content.transform.GetChild(j).gameObject.SetActive(true);
-            content.transform.GetChild(j).GetComponent<MyVocabButton>().SetVocabButton(list[j]);
+            var c = content.transform.GetChild(j);
+            c.gameObject.SetActive(true);
+            c.GetComponent<MyVocabButton>().SetVocabButton(l[j], list[l[j]]);
+            c.GetComponent<MyVocabButton>().favoriteToggle.SetCheck(true);
         }
 
-        InitSelectVocabBySortTypeCallBack(list);
+        //InitSelectVocabBySortTypeCallBack(list);
+        InitSelectMyVocabBySortTypeCallBack(list);
         isListLoadingDone = true;
     }
 }

@@ -1,16 +1,30 @@
-﻿using Doozy.Engine;
+﻿using System.Collections;
+using Doozy.Engine;
 using UnityEngine;
 
 public class ViewHome : MonoBehaviour
 {
-    void Start()
+    IEnumerator Start()
     {
         Application.targetFrameRate = 60;
-        FileReadWrite.Instance.PrepareUserDataJson();
 #if UNITY_EDITOR
         OX_DataLoader.InitOriginalData();
         //OX_DataLoader.TestMyList();
-        NetWorkManager.Instance.LoadDataFromServer();
+        //NetWorkManager.Instance.LoadDataFromServer();
+        StartCoroutine(NetWorkManager.Instance.GetVocabList());
+        yield return new WaitWhile(() =>
+        {
+            return false == NetWorkManager.Instance.isJsonDone;
+        });
+        StartCoroutine(NetWorkManager.Instance.GetMyNoteList());
+        yield return new WaitWhile(() =>
+        {
+            return false == NetWorkManager.Instance.isJsonDone;
+        });
+        FileReadWrite.Instance.PrepareUserDataJson();
+        UserDataManager.Instance.InitUserNoteCount();
+
+        GameEventMessage.SendEvent("PrepareDataDone");
 #endif
     }
 

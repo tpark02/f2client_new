@@ -36,12 +36,13 @@ public class MyVocabDetail : MonoBehaviour
         StatusBar.statusBar.GetComponent<StatusBar>().ResetSelectedVocabScrollPos();
     }
     
-    public void SetVocabDetail(string v, string d, string e1, string t1, string e2, string t2)
+    public void SetVocabDetail(OX_DataLoader.VocabData data, string v, string d, string e1, string t1, string e2, string t2)
     {
         var deflist = d.Split(new string[] { "[t]" }, StringSplitOptions.None);
         vocab.text = v;
         vocabPanel.vocab = v;
-        
+        vocabPanel.vocabData = data;
+
         def.text = string.Empty;
         for (int i = 0; i < deflist.Length; i++)
         {
@@ -57,7 +58,7 @@ public class MyVocabDetail : MonoBehaviour
 
         vocabPanel.SetColor(false);
 
-        bool isVocabExist = UserDataManager.Instance.IsVocabExist(vocab.text);
+        bool isVocabExist = UserDataManager.Instance.IsVocabExist(data.id);
         if (isVocabExist)
         {
             vocabPanel.SetColor(true);
