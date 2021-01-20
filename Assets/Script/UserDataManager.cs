@@ -11,10 +11,10 @@ public class UserDataManager : Singleton<UserDataManager>
     //{
     //    userStudyVocabList = d;
     //}
-    public void DeleteUserStudyVocab(int s)
-    {
-        userStudyVocabList.Remove(s);
-    }
+    //public void DeleteUserStudyVocab(int s)
+    //{
+    //    userStudyVocabList.Remove(s);
+    //}
     public void AddUserStudyVocab(int s, string noteName)
     {
         if (userStudyVocabList.ContainsKey(s) == false)
@@ -49,7 +49,7 @@ public class UserDataManager : Singleton<UserDataManager>
 
         return l;
     }
-    public void InitUserNote(string noteName)
+    public void AddUserNote(string noteName)
     {
         if (userNoteCount.ContainsKey(noteName) == false)
         {
@@ -68,6 +68,16 @@ public class UserDataManager : Singleton<UserDataManager>
         }
     }
 
+    public bool CreateMyNote(string noteName)
+    {
+        if (userNoteCount.ContainsKey(noteName) == false)
+        {
+            userNoteCount.Add(noteName, 0);
+            return true;
+        }
+
+        return false;
+    }
     public void AddMyVocabUserNote(string noteName)
     {
         if (userNoteCount.ContainsKey(noteName))
@@ -76,6 +86,24 @@ public class UserDataManager : Singleton<UserDataManager>
         }
     }
 
+    public void DeleteMyNote(string noteName)
+    {
+        if (userNoteCount.ContainsKey(noteName))
+        {
+            userNoteCount.Remove(noteName);
+        }
+        Dictionary<int, string> dic = new Dictionary<int, string>();
+        
+        foreach (var v in userStudyVocabList)
+        {
+            if (v.Value.Equals(noteName) == false)
+            {
+                dic.Add(v.Key, v.Value);
+            }
+        }
+
+        userStudyVocabList = dic;
+    }
     public void RemoveMyVocabUserNote(int vocabId)
     { 
         if (userStudyVocabList.ContainsKey(vocabId))
@@ -85,6 +113,7 @@ public class UserDataManager : Singleton<UserDataManager>
             {
                 userNoteCount[noteName]--;
             }
+            userStudyVocabList.Remove(vocabId);
         }
     }
     public int GetNoteCount(string s)

@@ -8,9 +8,15 @@ using SimpleJSON;
 
 public class DrawerLeft : MonoBehaviour
 {
+    public static DrawerLeft main = null;
     public static Action hideBackButtonCallBack = null;
     private bool isMyListLoadingDone = false;
     private bool isCreateNewNote = false;
+    public static bool isInitNoteListDone = false;
+    void Start()
+    {
+        main = gameObject.GetComponent<DrawerLeft>();
+    }
     public void OnClickHome()
     {
         ClearTitleRecord();
@@ -106,13 +112,14 @@ public class DrawerLeft : MonoBehaviour
         StatusBar.statusBar.GetComponent<StatusBar>().selectVocabButton.SetActive(false);
         StatusBar.statusBar.GetComponent<StatusBar>().selectVocabScroll.SetActive(false);
 
-        StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(false);
+        StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(true);
         
         InitNoteList();
     }
 
     public void InitNoteList()
     {
+        isInitNoteListDone = false;
         var myNoteList = MyNoteList.myNoteList.GetComponent<MyNoteList>();
         var content = myNoteList.content;
 
@@ -131,6 +138,8 @@ public class DrawerLeft : MonoBehaviour
             o.transform.SetParent(MyNoteList.myNoteList.GetComponent<MyNoteList>().content, false);
             o.GetComponent<MyNoteButton>().SetNoteName(d.Key);
         }
+
+        isInitNoteListDone = true;
         GameEventMessage.SendEvent("MyNoteListDone");
     }
 }

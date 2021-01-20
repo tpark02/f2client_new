@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,7 +11,7 @@ public class ViewVocabList : MonoBehaviour
     
     public static Action showBackButtonCallBack = null;
     public static Action InitSelectVocabScrollListCallBack = null;
-    public static Action<List<string>> InitSelectVocabBySortTypeCallBack = null;
+    public static Action<Dictionary<string, OX_DataLoader.VocabData>> InitSelectVocabBySortTypeCallBack = null;
 
     public static GameObject viewVocabList;
     public static bool isListLoadingDone = false;
@@ -36,10 +37,10 @@ public class ViewVocabList : MonoBehaviour
         
         ResetScrollPos();
 
-        foreach (Transform c in content.transform)
-        {
-            //c.GetComponent<VocabButton>().favoriteToggle = false;
-        }
+        //foreach (Transform c in content.transform)
+        //{
+        //    //c.GetComponent<VocabButton>().favoriteToggle = false;
+        //}
 
         StatusBar.sortAlphabeticallyCallBack = SortAlphabetically;
         StatusBar.sortByTypeCallBack = SortByType;
@@ -53,22 +54,21 @@ public class ViewVocabList : MonoBehaviour
 
         isListLoadingDone = false;
         
-        var eachDayVocabCount = OX_DataLoader.eachDayVocabCount;
-
-        for (int i = 0; i < OX_DataLoader.eachDayVocabCount; i++)
+        var list = OX_DataLoader.GetCurrentDayVocabList();
+        for (int i = 0; i < list.Count; i++)
         {
-            var s = OX_DataLoader.GetVocabList(i);
+            var data = list[i];
             var button = content.transform.GetChild(i).GetComponent<VocabButton>();
 
             button.favoriteToggle.SetCheck(false);
-            button.favoriteToggle.vocabData = s;
+            button.favoriteToggle.vocabData = data;
 
-            button.SetVocabButton(s.vocab);
+            button.SetVocabButton(data.vocab, data);
             content.transform.GetChild(i).gameObject.SetActive(true);
-
-            foreach (var data in UserDataManager.Instance.GetUserStudyVocabList())
+            var userlist = UserDataManager.Instance.GetUserStudyVocabList();
+            foreach (var u in userlist)
             {
-                if (s.id == data.Key)
+                if (data.id == u.Key)
                 {
                     button.favoriteToggle.SetCheck(true);
                     break;
@@ -88,28 +88,53 @@ public class ViewVocabList : MonoBehaviour
     {
         isListLoadingDone = false;
 
-        var eachDayVocabCount = OX_DataLoader.eachDayVocabCount;
+        var rowCount = OX_DataLoader.eachDayVocabCount;
 
-        for (int i = 0; i < eachDayVocabCount; i++)
+        for (int i = 0; i < rowCount; i++)
         {
-            content.transform.GetChild(i).GetComponent<VocabButton>().SetVocabButton("");
-            content.transform.GetChild(i).gameObject.SetActive(false);
+            var c = content.transform.GetChild(i);
+            {
+                var emptydata = OX_DataLoader.GetEmptyVocabData();
+                c.GetComponent<VocabButton>().SetVocabButton("", emptydata);
+                c.GetComponent<VocabButton>().favoriteToggle.SetCheck(false);
+                c.GetComponent<VocabButton>().favoriteToggle.vocabData = emptydata;
+                c.gameObject.SetActive(false);
+            }
         }
         
-        List<string> list = new List<string>();
-        
+        Dictionary<string, OX_DataLoader.VocabData> list = new Dictionary<string, OX_DataLoader.VocabData>();
 
-        for (int i = selectedDay * eachDayVocabCount; i < (selectedDay * eachDayVocabCount) + eachDayVocabCount; i++)
+        var vocablist = OX_DataLoader.GetCurrentDayVocabList();
+        for (int i = 0; i < vocablist.Count; i++)
         {
-            list.Add(OX_DataLoader.originalData[i]["vocab"].ToString());
+            var data = vocablist[i];
+            list.Add(data.vocab, data);
         }
-        
-        list.Sort();
+
+        var l = list.Keys.ToList();
+        l.Sort();
+
+        var userlist = UserDataManager.Instance.GetUserStudyVocabList();
 
         for (int i = 0; i < list.Count; i++)
         {
-            content.transform.GetChild(i).gameObject.SetActive(true);
-            content.transform.GetChild(i).GetComponent<VocabButton>().SetVocabButton(list[i]);
+            var vocabData = list[l[i]];
+
+            var c = content.transform.GetChild(i);
+            {
+                c.gameObject.SetActive(true);
+                c.GetComponent<VocabButton>().SetVocabButton(l[i], vocabData);
+                c.GetComponent<VocabButton>().favoriteToggle.vocabData = vocabData;
+            }
+
+            foreach (var data in userlist)
+            {
+                if (vocabData.id == data.Key)
+                {
+                    c.GetComponent<VocabButton>().favoriteToggle.SetCheck(true);
+                    break;
+                }
+            }
         }
         InitSelectVocabBySortTypeCallBack(list);
         isListLoadingDone = true;
@@ -118,38 +143,62 @@ public class ViewVocabList : MonoBehaviour
     public void SortByType(string type)
     {
         isListLoadingDone = false;
-        var eachDayVocabCount = OX_DataLoader.eachDayVocabCount;
-
-        for (int i = 0; i < eachDayVocabCount; i++)
+        //var eachDayVocabCount = OX_DataLoader.eachDayVocabCount;
+        var vocabList = OX_DataLoader.GetCurrentDayVocabList();
+        for (int i = 0; i < vocabList.Count; i++)
         {
-            content.transform.GetChild(i).GetComponent<VocabButton>().SetVocabButton("");
-            content.transform.GetChild(i).gameObject.SetActive(false);
+            var emptydata = OX_DataLoader.GetEmptyVocabData();
+            var c = content.transform.GetChild(i);
+            c.GetComponent<VocabButton>().SetVocabButton("", emptydata);
+            c.GetComponent<VocabButton>().favoriteToggle.SetCheck(false);
+            c.GetComponent<VocabButton>().favoriteToggle.vocabData = emptydata;
+            c.gameObject.SetActive(false);
         }
 
-        List<string> list = new List<string>();
-        
+        Dictionary<string, OX_DataLoader.VocabData> list = new Dictionary<string, OX_DataLoader.VocabData>();
 
-        for (int i = selectedDay * eachDayVocabCount; i < (selectedDay * eachDayVocabCount) + eachDayVocabCount; i++)
+
+        for (int i = 0; i < vocabList.Count; i++)
         {
-            var ps = OX_DataLoader.originalData[i]["ps"].ToString();
+            var data = vocabList[i];
+            var ps = data.type;
             var psList = ps.Split(new string[] { ".:" }, StringSplitOptions.None);
             
             foreach (var s in psList)
             {
                 if (s.Equals(type))
                 {
-                    list.Add(OX_DataLoader.originalData[i]["vocab"].ToString());
+                    //var data = OX_DataLoader.GetVocabDataById(i);
+                    list.Add(data.vocab, data);
                     break;
                 }
             }
         }
 
-        list.Sort();
+        var l = list.Keys.ToList();
+        l.Sort();
+
+        var userlist = UserDataManager.Instance.GetUserStudyVocabList();
 
         for (int i = 0; i < list.Count; i++)
         {
-            content.transform.GetChild(i).gameObject.SetActive(true);
-            content.transform.GetChild(i).GetComponent<VocabButton>().SetVocabButton(list[i]);
+            var vocabData = list[l[i]];
+
+            var c = content.transform.GetChild(i);
+            {
+                c.gameObject.SetActive(true);
+                c.GetComponent<VocabButton>().SetVocabButton(l[i], vocabData);
+                c.GetComponent<VocabButton>().favoriteToggle.vocabData = vocabData;
+            }
+
+            foreach (var data in userlist)
+            {
+                if (vocabData.id == data.Key)
+                {
+                    c.GetComponent<VocabButton>().favoriteToggle.SetCheck(true);
+                    break;
+                }
+            }
         }
 
         InitSelectVocabBySortTypeCallBack(list);

@@ -18,10 +18,11 @@ public class VocabButton : MonoBehaviour
         GetComponent<Button>().onClick.AddListener(OnClickVocabButton);
     }
 
-    public void SetVocabButton(string v)
+    public void SetVocabButton(string v, OX_DataLoader.VocabData data)
     {
         vocab.text = v;
-        vocabData = OX_DataLoader.GetVocab(vocab.text);
+        vocabData = data;
+        //vocabData = OX_DataLoader.GetVocab(vocab.text);
     }
     
     public void OnClickVocabButton()
@@ -29,7 +30,7 @@ public class VocabButton : MonoBehaviour
         StatusBar.RecordPrevTitle((int)Title.VOCAB_LIST);
         StatusBar.SetStatusTitle((int)Title.VOCAB_DETAIL);
 
-        StartCoroutine(NetWorkManager.Instance.GetVocabList());
+        //StartCoroutine(NetWorkManager.Instance.GetVocabList());
 
         StartCoroutine(LoadVocabDetail());
     }
@@ -40,16 +41,14 @@ public class VocabButton : MonoBehaviour
         {
             return false == NetWorkManager.Instance.isLoadingDone;
         });
-
-        var d = OX_DataLoader.GetVocab(vocab.text);
-        ViewVocabDetail.isDetailDone = false;
         
-        ViewVocabDetail.viewVocabDetail.GetComponent<ViewVocabDetail>().SetVocabDetail(d.id, vocab.text
-            , d.def
-            , d.e1
-            , d.t1
-            , d.e2
-            , d.t2);
+        ViewVocabDetail.isDetailDone = false;
+        ViewVocabDetail.viewVocabDetail.GetComponent<ViewVocabDetail>().SetVocabDetail(vocabData, vocabData.id, vocabData.vocab
+            , vocabData.def
+            , vocabData.e1
+            , vocabData.t1
+            , vocabData.e2
+            , vocabData.t2);
         
         ViewVocabDetail.isDetailDone = true;
 

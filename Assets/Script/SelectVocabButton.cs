@@ -32,7 +32,8 @@ public class SelectVocabButton : MonoBehaviour
         var d = OX_DataLoader.GetVocab(vocab);
         if (isTestResult == false)
         {
-            ViewVocabDetail.viewVocabDetail.GetComponent<ViewVocabDetail>().SetVocabDetail(d.id, vocab
+            var data = OX_DataLoader.GetVocabDataById(d.id);
+            ViewVocabDetail.viewVocabDetail.GetComponent<ViewVocabDetail>().SetVocabDetail(data, d.id, vocab
                 , d.def
                 , d.e1
                 , d.t1
@@ -42,7 +43,8 @@ public class SelectVocabButton : MonoBehaviour
         }
         else
         {
-            ViewVocabResultDetail.viewResultDetail.GetComponent<ViewVocabResultDetail>().SetVocabDetail(d.id,vocab
+            var data = OX_DataLoader.GetVocabDataById(d.id);
+            ViewVocabResultDetail.viewResultDetail.GetComponent<ViewVocabResultDetail>().SetVocabDetail(data, d.id,vocab
                 , d.def
                 , d.e1
                 , d.t1

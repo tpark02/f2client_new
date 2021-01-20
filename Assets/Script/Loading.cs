@@ -11,8 +11,8 @@ using UnityEngine.UI;
     
 enum PacketType
 {
-    MY_VOCAB_LIST = 0,
-    MY_NOTE_LIST = 1,
+    GET_MY_VOCAB_LIST = 0,
+    GET_MY_NOTE_LIST = 1,
     PREPARE_DATA = 2,
 }
 

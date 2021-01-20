@@ -689,7 +689,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.2
+        Duration: 0.1
     LoadSelectedPresetAtRuntime: 0
     InstantAnimation: 0
     OnFinished:

@@ -256,7 +256,7 @@ public class StatusBar : MonoBehaviour
     }
     public void InitSelectVocabScrollList()
     {
-        var d = OX_DataLoader.currentDay;
+        //var d = OX_DataLoader.currentDay;
         var eachDayVocabCount = OX_DataLoader.eachDayVocabCount;
         var c = selectedVocabScrollContent.transform;
 
@@ -268,10 +268,11 @@ public class StatusBar : MonoBehaviour
             c.GetChild(i).gameObject.SetActive(false);
         }
 
-        for (int i = 0; i < OX_DataLoader.eachDayVocabCount; i++)
+        var list = OX_DataLoader.GetCurrentDayVocabList();
+        for (int i = 0; i < list.Count; i++)
         {
-            var s = OX_DataLoader.GetVocabList(i);
-            c.GetChild(i).GetComponent<SelectVocabButton>().SetSelectVocabButton(s.vocab);
+            var data = list[i];
+            c.GetChild(i).GetComponent<SelectVocabButton>().SetSelectVocabButton(data.vocab);
             c.GetChild(i).gameObject.SetActive(true);
         }
         selectedVocabScrollContent.transform.localPosition = new Vector3(startPos.x, startPos.y, 0f);
@@ -298,7 +299,7 @@ public class StatusBar : MonoBehaviour
         }
         selectedVocabScrollContent.transform.localPosition = new Vector3(startPos.x, startPos.y, 0f);
     }
-    public void InitSelectVocabScrollBySortType(List<string> l)
+    public void InitSelectVocabScrollBySortType(Dictionary<string, OX_DataLoader.VocabData> l)
     {
         var eachDayVocabCount = OX_DataLoader.eachDayVocabCount;
         var c = selectedVocabScrollContent.transform;
@@ -310,10 +311,13 @@ public class StatusBar : MonoBehaviour
             c.GetChild(i).GetComponent<SelectVocabButton>().SetSelectVocabButton("");
             c.transform.GetChild(i).gameObject.SetActive(false);
         }
-        for (int i = 0; i < l.Count; i++)
+        //for (int i = 0; i < l.Count; i++)
+        int j = 0;
+        foreach (var i in l)
         {
-            c.GetChild(i).gameObject.SetActive(true);
-            c.GetChild(i).GetComponent<SelectVocabButton>().SetSelectVocabButton(l[i]);
+            c.GetChild(j).gameObject.SetActive(true);
+            c.GetChild(j).GetComponent<SelectVocabButton>().SetSelectVocabButton(i.Key);
+            j++;
         }
         selectedVocabScrollContent.transform.localPosition = new Vector3(startPos.x, startPos.y, 0f);
     }

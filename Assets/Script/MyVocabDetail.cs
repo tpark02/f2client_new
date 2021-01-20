@@ -41,6 +41,7 @@ public class MyVocabDetail : MonoBehaviour
         var deflist = d.Split(new string[] { "[t]" }, StringSplitOptions.None);
         vocab.text = v;
         vocabPanel.vocab = v;
+        //vocabPanel.vocabId = data.id;
         vocabPanel.vocabData = data;
 
         def.text = string.Empty;

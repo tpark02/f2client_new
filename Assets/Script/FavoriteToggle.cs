@@ -23,6 +23,13 @@ public class FavoriteToggle : MonoBehaviour
             ToggleOn();
         }
     }
+
+    public void CheckButtonOff()
+    {
+        isOn = false;
+        check.SetActive(false);
+    }
+
     public void ToggleOn()
     {
         SelectNotePopup.toggleOffCallBack = () =>
@@ -30,14 +37,13 @@ public class FavoriteToggle : MonoBehaviour
             isOn = false;
             check.SetActive(false);
         };
-        NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id);
+        NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id, GetComponent<FavoriteToggle>(), null);
     }
 
     public void ToggleOff()
     {
         UserDataManager.Instance.RemoveMyVocabUserNote(vocabData.id);
         NetWorkManager.Instance.RemoveMyVocab(vocabData.id);
-        OX_DataLoader.RemoveFromUserList(vocabData.id);
     }
 
     public void SetCheck(bool isActive)

@@ -33,6 +33,9 @@ public class NetWorkManager : Singleton<NetWorkManager>
     private string addVocabUrl = "addMyVocab";
     private string removeVocabUrl = "removeMyVocab";
     private string createNewNoteUrl = "createNewNote";
+    private string deleteMyNoteUrl = "deleteMyNote";
+    private string deleteAllMyVocabs = "deleteAllMyVocabs";
+
 
     private string recvData = string.Empty;
     
@@ -53,7 +56,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
         var p = UIPopupManager.GetPopup("WarningPopup");
         if (p == null)
         {
-            Debug.Log("<color=red>warning popup is null</color>");
+            Debug.Log("<color=red>warning popup is null.</color>");
             return;
         }
         p.Data.SetButtonsCallbacks(() =>
@@ -119,25 +122,27 @@ public class NetWorkManager : Singleton<NetWorkManager>
     public IEnumerator DeleteMyNote(string noteName)
     {
         WWWForm packet = new WWWForm();
-        form.AddField("userid", "tpark@gmail.com");
-        form.AddField("noteName", noteName);
+        packet.AddField("userid", userEmail);
+        packet.AddField("noteName", noteName);
 
-        www = UnityWebRequest.Post("http://localhost:3000/deleteMyNote", form);
-        yield return www.Send();
-
-        if (www.isNetworkError)
+        StartCoroutine(MesseageLoop(deleteMyNoteUrl, packet, RecvPacket));
+        yield return new WaitWhile(() =>
         {
-            Debug.Log(www.error);
-            ShowWarningPopup("Delete my note error.");
-        }
-        else
-        {
-            Debug.Log(www.downloadHandler.text);
-            var data = JSON.Parse(www.downloadHandler.text);
-            Debug.Log("create new note result : " + data["result"]);
-        }
+            return false == isLoadingDone;
+        });
     }
+    public IEnumerator DeleteAllMyVocabs(string noteName)
+    {
+        WWWForm packet = new WWWForm();
+        packet.AddField("userid", userEmail);
+        packet.AddField("noteName", noteName);
 
+        StartCoroutine(MesseageLoop(deleteAllMyVocabs, packet, RecvPacket));
+        yield return new WaitWhile(() =>
+        {
+            return false == isLoadingDone;
+        });
+    }
     public IEnumerator CreateNewNote(string newNoteName)
     {
         WWWForm packet = new WWWForm();
@@ -172,7 +177,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
         }
     }
 
-    public void ShowSelectNotePopup(int vocabId)
+    public void ShowSelectNotePopup(int vocabId, FavoriteToggle toggle, VocabPanel panel)
     {
         var p = UIPopupManager.GetPopup("SelectNotePopup");
         if (p == null)
@@ -181,7 +186,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
         }
 
         p.GetComponent<SelectNotePopup>().vocabId = vocabId;
-        p.GetComponent<SelectNotePopup>().InitPopup();
+        p.GetComponent<SelectNotePopup>().InitPopup(toggle, panel);
         UIPopupManager.ShowPopup(p, p.AddToPopupQueue, false, "Popup");
     }
 
@@ -194,7 +199,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
         {
             return false == isLoadingDone;
         });
-        UnPack((int)PacketType.MY_NOTE_LIST);
+        UnPack((int)PacketType.GET_MY_NOTE_LIST);
     }
     public IEnumerator GetVocabList()
     {
@@ -205,7 +210,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
         {
             return false == isLoadingDone;
         });
-        UnPack((int)PacketType.MY_VOCAB_LIST);
+        UnPack((int)PacketType.GET_MY_VOCAB_LIST);
     }
 
     public void UnPack(int type)
@@ -219,10 +224,10 @@ public class NetWorkManager : Singleton<NetWorkManager>
 
         switch (type)
         {
-            case (int)PacketType.MY_VOCAB_LIST:
+            case (int)PacketType.GET_MY_VOCAB_LIST:
                 SetMyVocabList(data);
                 break;
-            case (int)PacketType.MY_NOTE_LIST:
+            case (int)PacketType.GET_MY_NOTE_LIST:
                 SetMyNoteList(data);
                 break;
         }
@@ -249,7 +254,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
         foreach (var d in data)
         {
             //noteList.Add(d.Value["note_name"]);
-            UserDataManager.Instance.InitUserNote(d.Value["note_name"]);
+            UserDataManager.Instance.AddUserNote(d.Value["note_name"]);
         }
         isJsonDone = true;
     }

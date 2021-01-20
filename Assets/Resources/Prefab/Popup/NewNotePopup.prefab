@@ -3069,8 +3069,8 @@ MonoBehaviour:
   StartScale: {x: 1, y: 1, z: 1}
   StartAlpha: 1
   AllowMultipleClicks: 1
-  ButtonCategory: Custom
-  ButtonName: Ok
+  ButtonCategory: General
+  ButtonName: ConfirmCreateNoteButton
   ClickMode: 0
   DeselectButtonAfterClick: 0
   DisableButtonBetweenClicksInterval: 0.2
@@ -5552,7 +5552,7 @@ MonoBehaviour:
         Duration: 1
       Fade:
         AnimationType: 2
-        Enabled: 0
+        Enabled: 1
         From: 0
         To: 0
         By: 0.5
@@ -5568,7 +5568,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 1
+        Duration: 0.2
     LoadSelectedPresetAtRuntime: 0
     InstantAnimation: 1
     OnFinished:
@@ -5888,7 +5888,7 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.2
+        Duration: 0.1
     LoadSelectedPresetAtRuntime: 0
     InstantAnimation: 0
     OnFinished:

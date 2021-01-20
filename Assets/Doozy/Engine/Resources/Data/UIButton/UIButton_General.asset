@@ -15,28 +15,31 @@ MonoBehaviour:
   CategoryName: General
   DatabaseType: 0
   Names:
-  - Back
-  - Unnamed
-  - Second
-  - MenuOpen
-  - MenuClose
-  - Home
-  - Vocab
-  - ToeicPart5
-  - VocabOX
-  - MyPage
-  - VocabButton
-  - VocabDayButton
+  - AddNote
   - AlphabetSort
-  - PSSort
+  - Back
+  - ConfirmDeleteNoteButton
   - Favorite
-  - Sort
+  - Home
   - List
-  - VocabTest
-  - VocabTestDayButton
-  - VocabResultButton
+  - MenuClose
+  - MenuOpen
   - MyList
   - MyNoteButton
+  - MyPage
   - MyVocabButton
-  - AddNote
   - NoteSelectButton
+  - Ok
+  - PSSort
+  - Second
+  - Sort
+  - ToeicPart5
+  - Unnamed
+  - Vocab
+  - VocabButton
+  - VocabDayButton
+  - VocabOX
+  - VocabResultButton
+  - VocabTest
+  - VocabTestDayButton
+  - ConfirmCreateNoteButton

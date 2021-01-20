@@ -33,13 +33,13 @@ public class ViewVocabDetail : MonoBehaviour
         
         StatusBar.statusBar.GetComponent<StatusBar>().ResetSelectedVocabScrollPos();
     }
-    public void SetVocabDetail(int vocabId, string v, string d, string e1, string t1, string e2, string t2)
+    public void SetVocabDetail(OX_DataLoader.VocabData data, int vocabId, string v, string d, string e1, string t1, string e2, string t2)
     {
         var deflist = d.Split(new string[] { "[t]" }, StringSplitOptions.None);
         vocab.text = v;
         vocabPanel.vocab = v;
-        vocabPanel.vocabId = vocabId;
-
+        //vocabPanel.vocabId = vocabId;
+        vocabPanel.vocabData = data;
         def.text = string.Empty;
         for (int i = 0; i < deflist.Length; i++)
         {

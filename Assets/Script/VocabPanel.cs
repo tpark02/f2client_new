@@ -14,7 +14,7 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
     public string vocab = string.Empty;
     public OX_DataLoader.VocabData vocabData;
 
-    [HideInInspector] public int vocabId = -1;
+    //[HideInInspector] public int vocabId = -1;
     void Start()
     {
         vocabPanelColorList[0] = new Color32(255, 255, 255, 150);
@@ -52,13 +52,13 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
             if (currentColorIndex == 0)
             {
                 currentColorIndex = 1;
-                NetWorkManager.Instance.ShowSelectNotePopup(vocabId);
+                NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id, null, gameObject.GetComponent<VocabPanel>());
             }
             else if (currentColorIndex == 1)
             {
                 currentColorIndex = 0;
-                OX_DataLoader.RemoveFromUserList(vocabData.id);
-                NetWorkManager.Instance.RemoveMyVocab(vocabId);
+                UserDataManager.Instance.RemoveMyVocabUserNote(vocabData.id);
+                NetWorkManager.Instance.RemoveMyVocab(vocabData.id);
             }
 
             vocabPanel.color = vocabPanelColorList[currentColorIndex];

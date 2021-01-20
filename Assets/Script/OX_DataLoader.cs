@@ -83,7 +83,7 @@ public static class OX_DataLoader
     public static System.Random
         random = new System.Random(); // 난수 생성은 한번만 해야, 같은 숫자가 생성안된다. 참고 : https://crynut84.tistory.com/15
 
-    public static List<VocabData> vocablist = null;
+    private static List<VocabData> vocablist = new List<VocabData>();
     public static string currentNoteName = string.Empty;
     public static int currentDay = 0;
     public static int eachDayVocabCount = 30;
@@ -106,18 +106,14 @@ public static class OX_DataLoader
         }
     }
 
-    public static void ClearData()
-    {
-        vocablist.Clear();
-    }
     public static void InitVocabList(int d)
     {
         string errorStr = string.Empty;
 
-        if (vocablist == null)
-        {
-            vocablist = new List<VocabData>();
-        }
+        //if (vocablist == null)
+        //{
+        //    vocablist = new List<VocabData>();
+        //}
         vocablist.Clear();
         //for (var i = 0; i < originalData.Count; i++)
         //for (var i = 0; i < 1000; i++)
@@ -501,7 +497,10 @@ public static class OX_DataLoader
     {
         foreach (var v in vocablist)
         {
-            if (v.vocab.Equals(s)) return v;
+            if (v.vocab.Equals(s))
+            {
+                return v;
+            }
         }
         VocabData empty = new VocabData();
         empty.vocab = "empty";
@@ -582,7 +581,6 @@ public static class OX_DataLoader
 
     public static VocabData GetVocabDataById(int n)
     {
-
         foreach (var d in originalData)
         {
             if ((int) d["id"] == n)
@@ -768,28 +766,31 @@ public static class OX_DataLoader
         resultList.Add(d);
     }
 
-    public static void AddToUserList(int vocabId, string noteName)
-    {
-        UserDataManager.Instance.AddUserStudyVocab(vocabId, noteName);
+    //public static void AddToUserList(int vocabId, string noteName)
+    //{
+    //    UserDataManager.Instance.AddUserStudyVocab(vocabId, noteName);
 
-        string filename = FileReadWrite.Instance.GetStudyVocabFileName();
-        FileReadWrite.Instance.WriteUserData(filename);
-    }
+    //    string filename = FileReadWrite.Instance.GetStudyVocabFileName();
+    //    FileReadWrite.Instance.WriteUserData(filename);
+    //}
 
-    public static void RemoveFromUserList(int vocabId)
-    {
-        var isVocabExist = UserDataManager.Instance.IsVocabExist(vocabId);
+    //public static void RemoveFromUserList(int vocabId)
+    //{
+    //    var isVocabExist = UserDataManager.Instance.IsVocabExist(vocabId);
         
-        if (isVocabExist)
-        {
-            UserDataManager.Instance.DeleteUserStudyVocab(vocabId);
-        }
+    //    if (isVocabExist)
+    //    {
+    //        UserDataManager.Instance.DeleteUserStudyVocab(vocabId);
+    //    }
 
-        string filename = FileReadWrite.Instance.GetStudyVocabFileName();
-        FileReadWrite.Instance.WriteUserData(filename);
+    //    string filename = FileReadWrite.Instance.GetStudyVocabFileName();
+    //    FileReadWrite.Instance.WriteUserData(filename);
+    //}
+    public static List<VocabData> GetCurrentDayVocabList()
+    {
+        return vocablist;
     }
-
-    public static VocabData GetVocabList(int index)
+    public static VocabData GetCurrentDayVocabDataByIndex(int index)
     {
         return vocablist[index];
     }
