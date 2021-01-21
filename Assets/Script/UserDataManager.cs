@@ -2,11 +2,32 @@
 using System.Linq;
 using UnityEngine;
 
+public struct CurrentVocab
+{
+    public string def; 
+    public string type; 
+    public string e1; 
+    public string t1; 
+    public string e2; 
+    public string t2;
+
+    public CurrentVocab(string d, string t, string e1, string t1, string e2, string t2)
+    {
+        def = d.Equals("") ? "empty" : d;
+        type = t.Equals("") ? "empty" : t;
+        this.e1 = e1.Equals("") ? "empty" : e1;
+        this.t1 = t1.Equals("") ? "empty" : t1;
+        this.e2 = e2.Equals("") ? "empty" : e2;
+        this.t2 = t2.Equals("") ? "empty" : t2;
+    }
+}
+
 public class UserDataManager : Singleton<UserDataManager>
 {
     private Dictionary<int, string> userStudyVocabList = new Dictionary<int, string>();
     private Dictionary<string, int> userNoteCount = new Dictionary<string, int>();
-    
+    public CurrentVocab vocabData = new CurrentVocab("empty", "empty", "empty", "empty", "empty", "empty");
+    public string todaysExample = string.Empty;
     //public void SetUserStudyVocabList(Dictionary<int, string> d)
     //{
     //    userStudyVocabList = d;
@@ -22,9 +43,9 @@ public class UserDataManager : Singleton<UserDataManager>
             userStudyVocabList.Add(s, noteName);
         }
     }
-    public bool IsVocabExist(int s)
+    public bool IsVocabExist(int vocabId)
     {
-        if (userStudyVocabList.ContainsKey(s))
+        if (userStudyVocabList.ContainsKey(vocabId))
         {
             return true;
         }

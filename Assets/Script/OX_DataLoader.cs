@@ -180,7 +180,7 @@ public static class OX_DataLoader
     {
         
     }
-    private static string ColorVocab(string e, string v)
+    public static string ColorVocab(string e, string v)
     {
         string example = string.Empty;
         var ex1 = e.Split(new string[] { " " }, StringSplitOptions.None);
@@ -473,6 +473,13 @@ public static class OX_DataLoader
             example += " ";
         }
 
+        if (example[0] != '<')
+        {
+            example = Char.ToUpper(example[0]) + example.Substring(1);
+        }
+
+        example = example.Trim();
+        
         return example;
     }
     private static string CheckDataEmpty(string s)
@@ -550,18 +557,18 @@ public static class OX_DataLoader
                 v.e1 = ColorVocab(v.e1.ToLower(), v.vocab);
                 v.e2 = ColorVocab(v.e2.ToLower(), v.vocab);
 
-                if (v.e1[0] != '<')
-                {
-                    v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
-                }
+                //if (v.e1[0] != '<')
+                //{
+                //    v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
+                //}
 
-                if (v.e2[0] != '<')
-                {
-                    v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
-                }
+                //if (v.e2[0] != '<')
+                //{
+                //    v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
+                //}
 
-                v.e1 = v.e1.Trim();
-                v.e2 = v.e2.Trim();
+                //v.e1 = v.e1.Trim();
+                //v.e2 = v.e2.Trim();
                 return v;
             }
         }

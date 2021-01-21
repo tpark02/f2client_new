@@ -12,12 +12,12 @@ public class ViewVocabResultDetail : MonoBehaviour
     public static Action initVocabTestResultListCallBack = null;
     public static Action showBackButtonCallBack = null;
 
-    public static GameObject viewResultDetail = null;
+    public static ViewVocabResultDetail main = null;
 
     public static bool isDetailDone = false;
     void Start()
     {
-        viewResultDetail = gameObject;
+        main = GetComponent<ViewVocabResultDetail>();
     }
     public void OnView()
     {

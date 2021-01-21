@@ -14,6 +14,7 @@ enum PacketType
     GET_MY_VOCAB_LIST = 0,
     GET_MY_NOTE_LIST = 1,
     PREPARE_DATA = 2,
+    Get_VOCAB_DETAIL = 3,
 }
 
 public class Loading : MonoBehaviour

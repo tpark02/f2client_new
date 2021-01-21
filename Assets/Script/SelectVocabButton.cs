@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Runtime.InteropServices.ComTypes;
+using Doozy.Engine;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SelectVocabButton : MonoBehaviour
 {
     public Text label;
     private string vocab;
+    private bool isDetailLoadingDone = false;
     [HideInInspector] public bool isTestResult = false;
     [HideInInspector] public bool isMyList = false;
     public void SetSelectVocabButton(string s)
@@ -32,19 +36,12 @@ public class SelectVocabButton : MonoBehaviour
         var d = OX_DataLoader.GetVocab(vocab);
         if (isTestResult == false)
         {
-            var data = OX_DataLoader.GetVocabDataById(d.id);
-            ViewVocabDetail.viewVocabDetail.GetComponent<ViewVocabDetail>().SetVocabDetail(data, d.id, vocab
-                , d.def
-                , d.e1
-                , d.t1
-                , d.e2
-                , d.t2);
-            StatusBar.statusBar.GetComponent<StatusBar>().OnClickSelectListButton();
+            StartCoroutine(LoadVocabDetail(d.id));
         }
         else
         {
             var data = OX_DataLoader.GetVocabDataById(d.id);
-            ViewVocabResultDetail.viewResultDetail.GetComponent<ViewVocabResultDetail>().SetVocabDetail(data, d.id,vocab
+            ViewVocabResultDetail.main.GetComponent<ViewVocabResultDetail>().SetVocabDetail(data, d.id,vocab
                 , d.def
                 , d.e1
                 , d.t1
@@ -52,5 +49,17 @@ public class SelectVocabButton : MonoBehaviour
                 , d.t2);
             StatusBar.statusBar.GetComponent<StatusBar>().OnClickSelectListButton();
         }
+    }
+    public IEnumerator LoadVocabDetail(int vocabId)
+    {
+        StartCoroutine(NetWorkManager.Instance.GetVocabDetailCo(vocabId));
+        yield return new WaitWhile(() =>
+        {
+            return false == NetWorkManager.Instance.isJsonDone;
+        });
+
+        var data = OX_DataLoader.GetVocabDataById(vocabId);
+        ViewVocabDetail.main.SetVocabDetail(data);
+        StatusBar.statusBar.GetComponent<StatusBar>().OnClickSelectListButton();
     }
 }

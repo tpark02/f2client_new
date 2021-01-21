@@ -35,7 +35,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
     private string createNewNoteUrl = "createNewNote";
     private string deleteMyNoteUrl = "deleteMyNote";
     private string deleteAllMyVocabs = "deleteAllMyVocabs";
-
+    private string getVocabDetail = "getVocabDetail";
 
     private string recvData = string.Empty;
     
@@ -71,6 +71,24 @@ public class NetWorkManager : Singleton<NetWorkManager>
         UIPopupManager.ShowPopup(p, p.AddToPopupQueue, false, "Popup");
     }
 
+    public void GetVocabDetail(int vocabId)
+    {
+        StartCoroutine(GetVocabDetailCo(vocabId));
+    }
+
+    public IEnumerator GetVocabDetailCo(int vocabId)
+    {
+        WWWForm packet = new WWWForm();
+        packet.AddField("vocab_index", vocabId);
+
+        StartCoroutine(MesseageLoop(getVocabDetail, packet, RecvPacket));
+
+        yield return new WaitWhile(() =>
+        {
+            return false == isLoadingDone;
+        });
+        UnPack((int)PacketType.Get_VOCAB_DETAIL);
+    }
     #region My Vocab Functions
 
    
@@ -120,9 +138,6 @@ public class NetWorkManager : Singleton<NetWorkManager>
     }
 
     #endregion
-    
-   
-
     public IEnumerator DeleteMyNote(string noteName)
     {
         WWWForm packet = new WWWForm();
@@ -157,28 +172,6 @@ public class NetWorkManager : Singleton<NetWorkManager>
         {
             return false == isLoadingDone;
         });
-    }
-
-    public IEnumerator RenameMyNote(string newNoteName)
-    {
-        WWWForm packet = new WWWForm();
-        form.AddField("userid", "tpark@gmail.com");
-        form.AddField("newNoteName", newNoteName);
-
-        www = UnityWebRequest.Post("http://localhost:3000/renameMyNote", form);
-        yield return www.Send();
-
-        if (www.isNetworkError)
-        {
-            Debug.Log(www.error);
-            ShowWarningPopup("rename my note failed !");
-        }
-        else
-        {
-            Debug.Log(www.downloadHandler.text);
-            var data = JSON.Parse(www.downloadHandler.text);
-            Debug.Log("create new note result : " + data["result"]);
-        }
     }
 
     public void ShowSelectNotePopup(int vocabId
@@ -236,6 +229,9 @@ public class NetWorkManager : Singleton<NetWorkManager>
             case (int)PacketType.GET_MY_NOTE_LIST:
                 SetMyNoteList(data);
                 break;
+            case (int)PacketType.Get_VOCAB_DETAIL:
+                SetVocabDetail(data);
+                break;
         }
     }
 
@@ -261,6 +257,21 @@ public class NetWorkManager : Singleton<NetWorkManager>
         {
             //noteList.Add(d.Value["note_name"]);
             UserDataManager.Instance.AddUserNote(d.Value["note_name"]);
+        }
+        isJsonDone = true;
+    }
+    public void SetVocabDetail(JSONNode data)
+    {
+        isJsonDone = false;
+        //noteList.Clear();
+        foreach (var d in data)
+        {
+            UserDataManager.Instance.vocabData = new CurrentVocab(d.Value["def"],
+                d.Value["type"],
+                d.Value["example1"],
+                d.Value["translate1"],
+                d.Value["example2"],
+                d.Value["translate2"]);
         }
         isJsonDone = true;
     }

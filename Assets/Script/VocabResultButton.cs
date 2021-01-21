@@ -16,16 +16,27 @@ public class VocabResultButton : MonoBehaviour
         StatusBar.RecordPrevTitle((int)Title.VOCAB_TEST_RESULT);
         StatusBar.SetStatusTitle((int)Title.VOCAB_TEST_RESULT_DETAIL);
 
-        //StartCoroutine(LoadVocabDetail());
-        LoadVocabDetail();
+        StartCoroutine(LoadVocabDetail());
+        //LoadVocabDetail();
     }
-    private void LoadVocabDetail()
+    private IEnumerator LoadVocabDetail()
     {
-        ViewVocabResultDetail.viewResultDetail.SetActive(true);
+        ViewVocabResultDetail.main.gameObject.SetActive(true);
         var d = OX_DataLoader.GetVocab(vocab.text);
+        
         ViewVocabResultDetail.isDetailDone = false;
 
-        ViewVocabResultDetail.viewResultDetail.GetComponent<ViewVocabResultDetail>().SetVocabDetail(d, d.id, vocab.text
+        //ViewVocabResultDetail.main.SetDetail(d.id);
+
+        //yield return new WaitWhile(() =>
+        //{
+        //    return ViewVocabResultDetail.main.isDetailLoadingDone == false;
+        //});
+
+        ViewVocabResultDetail.main.SetVocabDetail(
+            d
+            , d.id
+            , vocab.text
             , d.def
             , d.e1
             , d.t1
@@ -33,13 +44,11 @@ public class VocabResultButton : MonoBehaviour
             , d.t2);
 
         ViewVocabResultDetail.isDetailDone = true;
-        //yield return new WaitWhile(() =>
-        //{
-        //    return ViewVocabResultDetail.isDetailDone == false;
-        //});
+        yield return new WaitWhile(() =>
+        {
+            return ViewVocabResultDetail.isDetailDone == false;
+        });
 
         StatusBar.statusBar.GetComponent<StatusBar>().sortPanel.SetActive(false);
-
-        //GameEventMessage.SendEvent("VocabTestFinish");
     }
 }
