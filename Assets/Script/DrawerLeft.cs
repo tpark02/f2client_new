@@ -116,7 +116,7 @@ public class DrawerLeft : MonoBehaviour
 
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(true);
         
-        MyNoteList.main.vocabTouchNotice.SetLabel("각 노트에 단어를 30개씩 추가할 수 있습니다.");
+        MyNoteList.main.vocabTouchNotice.SetLabel("최대 10개의 노트를 만들 수 있습니다.");
         MyNoteList.main.InitNoteList();
     }
 }

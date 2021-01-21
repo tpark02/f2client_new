@@ -12,6 +12,7 @@ public class MyVocabList : MonoBehaviour
     [SerializeField] public Transform content;
     [SerializeField] public MyVocabButton myVocabButton;
     [SerializeField] public GameObject emptyPanel;
+    [SerializeField] public VocabTouchNotice myVocabListTouchNotice;
 
     public static Action showBackButtonCallBack = null;
     public static Action InitSelectVocabScrollListCallBack = null;
@@ -46,6 +47,8 @@ public class MyVocabList : MonoBehaviour
         StatusBar.sortByTypeCallBack = SortByType;
         // init selected vocab scroll list
         InitSelectVocabScrollListCallBack();
+
+        myVocabListTouchNotice.SetLabel("각 노트에 최대 30개 단어를 추가할 수 있습니다.");
     }
 
     public void LoadVocabRoutine(string noteName)
