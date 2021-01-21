@@ -17,7 +17,8 @@ public class ViewVocabTest : MonoBehaviour
     [SerializeField] public GameObject progressPanel2;
     [SerializeField] public Text vocabText;
     [SerializeField] public Text debugNumberText;
-    
+    [SerializeField] public VocabPanel vocabPanel;
+
     private int answerChoiceIndex = 0;
     // Start is called before the first frame update
     void Start()
@@ -59,6 +60,7 @@ public class ViewVocabTest : MonoBehaviour
         
         var s = OX_DataLoader.GetCurrentVocabQuestion();
         vocabText.text = s.vocab;
+        vocabPanel.vocab = s.vocab;
 
         var choicedata = OX_DataLoader.GetCurrentAnswerChoice();
         

@@ -2454,6 +2454,7 @@ MonoBehaviour:
   progressPanel2: {fileID: 7556081805362140772}
   vocabText: {fileID: 1629398085899890031}
   debugNumberText: {fileID: 215417618}
+  vocabPanel: {fileID: 6165121596700421626}
 --- !u!1 &8168062344256913210
 GameObject:
   m_ObjectHideFlags: 0
@@ -2884,6 +2885,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ad11d7b56f29adf4db2665e06a9db9fc, type: 3}
+--- !u!224 &835215475574462273 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7094372868510823913, guid: ad11d7b56f29adf4db2665e06a9db9fc,
+    type: 3}
+  m_PrefabInstance: {fileID: 7629958160493044392}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8990302491713260319 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1522488246018714039, guid: ad11d7b56f29adf4db2665e06a9db9fc,
@@ -2896,12 +2903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aefcd9b9a23c93a4da494c0ad38f2528, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &835215475574462273 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 7094372868510823913, guid: ad11d7b56f29adf4db2665e06a9db9fc,
-    type: 3}
-  m_PrefabInstance: {fileID: 7629958160493044392}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7629958160920951637
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3278,6 +3279,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6165121596700421626 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4354391399753539137, guid: 619be54334d52344283a95920d289704,
+    type: 3}
+  m_PrefabInstance: {fileID: 7629958161364530107}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 781120024841b39418f0067593ccea2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &1629398087052820701 stripped
