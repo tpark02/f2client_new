@@ -4,9 +4,14 @@ using UnityEngine;
 
 public class ViewHome : MonoBehaviour
 {
+    public static ViewHome main = null;
+    [SerializeField] public VocabTouchNotice homeVocabTouchNotice;
+
     IEnumerator Start()
     {
         Application.targetFrameRate = 60;
+        homeVocabTouchNotice.SetLabel("단어를 두번 터치하면단어장에 추가됩니다.");
+        main = GetComponent<ViewHome>();
 #if UNITY_EDITOR
         OX_DataLoader.InitOriginalData();
         //OX_DataLoader.TestMyList();

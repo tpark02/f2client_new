@@ -29,6 +29,8 @@ public class DrawerLeft : MonoBehaviour
         StatusBar.statusBar.GetComponent<StatusBar>().selectVocabScroll.SetActive(false);
 
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(false);
+
+        ViewHome.main.homeVocabTouchNotice.SetLabel("단어를 더블 터치하면단어장에 추가됩니다.");
     }
     public void OnClickVocab()
     {
@@ -44,18 +46,18 @@ public class DrawerLeft : MonoBehaviour
 
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(false);
     }
-    public void ResetOtherPages()
-    {
-        if (BackButtonController.resetVocabDayScrollPos != null)
-        {
-            BackButtonController.resetVocabDayScrollPos();
-        }
+    //public void ResetOtherPages()
+    //{
+    //    if (BackButtonController.resetVocabDayScrollPos != null)
+    //    {
+    //        BackButtonController.resetVocabDayScrollPos();
+    //    }
 
-        if (BackButtonController.resetVocabListScrollPos != null)
-        {
-            BackButtonController.resetVocabListScrollPos();
-        }
-    }
+    //    if (BackButtonController.resetVocabListScrollPos != null)
+    //    {
+    //        BackButtonController.resetVocabListScrollPos();
+    //    }
+    //}
 
     public void OnClickVocabTest()
     {
@@ -114,33 +116,7 @@ public class DrawerLeft : MonoBehaviour
 
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(true);
         
+        MyNoteList.main.vocabTouchNotice.SetLabel("각 노트에 단어를 30개씩 추가할 수 있습니다.");
         MyNoteList.main.InitNoteList();
-        //InitNoteList();
     }
-
-    //public void InitNoteList()
-    //{
-    //    MyNoteList.isInitNoteListDone = false;
-    //    var myNoteList = MyNoteList.myNoteList.GetComponent<MyNoteList>();
-    //    var content = myNoteList.content;
-
-    //    foreach (Transform child in content.transform)
-    //    {
-    //        Destroy(child.gameObject);
-    //    }
-
-    //    var notelist = UserDataManager.Instance.GetNoteList();
-
-    //    foreach (var d in notelist)
-    //    {
-    //        Debug.Log(" note name :" + d);
-    //        var b = myNoteList.myNoteButton;
-    //        var o = Instantiate(b.gameObject);
-    //        o.transform.SetParent(MyNoteList.myNoteList.GetComponent<MyNoteList>().content, false);
-    //        o.GetComponent<MyNoteButton>().SetNoteName(d.Key);
-    //    }
-
-    //    MyNoteList.isInitNoteListDone = true;
-    //    GameEventMessage.SendEvent("MyNoteListDone");
-    //}
 }

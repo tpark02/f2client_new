@@ -32,10 +32,10 @@ RectTransform:
   m_Father: {fileID: 2188853341566536935}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.00032902}
-  m_SizeDelta: {x: 720, y: 76.95044}
+  m_SizeDelta: {x: 0, y: 76.95044}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5750884807551282815
 CanvasRenderer:
@@ -66,18 +66,19 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: 096a0eb0e3970e749b9f562ae5c432e0, type: 3}
-    m_FontSize: 35
+    m_FontSize: 25
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 3
-    m_MaxSize: 40
+    m_BestFit: 1
+    m_MinSize: 2
+    m_MaxSize: 35
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uB2E8\uC5B4\uB97C \uD130\uCE58\uD558\uBA74\uB2E8\uC5B4\uC7A5\uC5D0 \uCD94\uAC00\uB429\uB2C8\uB2E4."
+  m_Text: "\uB2E8\uC5B4\uB97C \uB354\uBE14 \uD130\uCE58\uD558\uBA74\uB2E8\uC5B4\uC7A5\uC5D0
+    \uCD94\uAC00\uB429\uB2C8\uB2E4."
 --- !u!1 &7292032034842335760
 GameObject:
   m_ObjectHideFlags: 0
@@ -89,6 +90,8 @@ GameObject:
   - component: {fileID: 2188853341566536935}
   - component: {fileID: 627157821148303625}
   - component: {fileID: 3448724767995830061}
+  - component: {fileID: 651888296}
+  - component: {fileID: 348784335210261371}
   m_Layer: 0
   m_Name: VocabTouchNotice
   m_TagString: Untagged
@@ -137,7 +140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 0.392}
+  m_Color: {r: 1, g: 0, b: 0, a: 0.78431374}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -153,3 +156,32 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &651888296
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292032034842335760}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: e07e56a6f5ca09445b62091370d4793f, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: e07e56a6f5ca09445b62091370d4793f, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &348784335210261371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7292032034842335760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad4ec37093d8ad944bee478c73056f49, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  label: {fileID: 2532727534254786114}

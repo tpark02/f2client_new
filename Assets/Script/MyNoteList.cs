@@ -12,7 +12,7 @@ public class MyNoteList : MonoBehaviour
     [SerializeField] public MyNoteButton myNoteButton; 
     [SerializeField] public GameObject emptyPanel;
     [SerializeField] public GameObject scrollView;
-
+    [SerializeField] public VocabTouchNotice vocabTouchNotice;
     private Vector3 startPos;
 
     void Awake()
@@ -46,6 +46,7 @@ public class MyNoteList : MonoBehaviour
     public void InitNoteList()
     {
         isInitNoteListDone = false;
+
         //var myNoteList = MyNoteList.myNoteList.GetComponent<MyNoteList>();
         //var content = myNoteList.content;
 
@@ -68,6 +69,7 @@ public class MyNoteList : MonoBehaviour
             scrollView.SetActive(true);
             emptyPanel.SetActive(false);
         }
+
         foreach (var d in notelist)
         {
             Debug.Log(" note name :" + d);
