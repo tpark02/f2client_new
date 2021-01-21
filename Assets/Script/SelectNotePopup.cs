@@ -11,12 +11,14 @@ public class SelectNotePopup : MonoBehaviour
     [SerializeField] public Transform content;
     [SerializeField] public NoteSelectButton selectVocabButton;
     [HideInInspector] public int vocabId = -1;
+    [HideInInspector] public VocabPanel vocabPanel = null;
 
     void Start()
     {
         
     }
-    public void InitPopup(FavoriteToggle toggle, VocabPanel panel)
+    public void InitPopup(FavoriteToggle toggle
+        , VocabPanel panel)
     {
         var notelist = UserDataManager.Instance.GetNoteList();
         foreach (var d in notelist)
@@ -29,6 +31,8 @@ public class SelectNotePopup : MonoBehaviour
             o.GetComponent<NoteSelectButton>().panel = panel;
         }
 
+        vocabPanel = panel;
+
         closePopupCallBack = () =>
         {
             UIPopupManager.ClearQueue();
@@ -40,6 +44,11 @@ public class SelectNotePopup : MonoBehaviour
         {
             toggleOffCallBack();
             toggleOffCallBack = null;
+        }
+
+        if (vocabPanel != null)
+        {
+            vocabPanel.SetColor(false);
         }
         UIPopupManager.ClearQueue();
     }

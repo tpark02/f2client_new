@@ -113,6 +113,14 @@ public class StatusBar : MonoBehaviour
 
     public static void SetStatusTitle(int n)
     {
+        if ((int) Title.VOCAB_TEST == n)
+        {
+            ViewVocabTest.isVocabTestInProgress = true;
+        }
+        else
+        {
+            ViewVocabTest.isVocabTestInProgress = false;
+        }
         statusBar.GetComponent<StatusBar>().SetTitle(n);
     }
 

@@ -82,10 +82,13 @@ public class BackButtonController : MonoBehaviour
 
         if (prevPage == (int) Title.MyVocabList)
         {
-            MyVocabList.myVocabList.GetComponent<MyVocabList>().LoadVocabRoutine(OX_DataLoader.currentNoteName);
+            var noteName = OX_DataLoader.currentNoteName;
+            MyVocabList.myVocabList.GetComponent<MyVocabList>().LoadVocabRoutine(noteName);
             var bar = StatusBar.statusBar.GetComponent<StatusBar>();
             bar.sortButton.transform.GetChild(0).GetComponent<Text>().text = "Sort List  ";
         }
+
+        ViewVocabTest.isVocabTestInProgress = false;
     }
 
     public void ShowHomeButton()

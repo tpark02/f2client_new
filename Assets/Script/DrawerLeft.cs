@@ -12,7 +12,7 @@ public class DrawerLeft : MonoBehaviour
     public static Action hideBackButtonCallBack = null;
     private bool isMyListLoadingDone = false;
     private bool isCreateNewNote = false;
-    public static bool isInitNoteListDone = false;
+
     void Start()
     {
         main = gameObject.GetComponent<DrawerLeft>();
@@ -114,32 +114,33 @@ public class DrawerLeft : MonoBehaviour
 
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(true);
         
-        InitNoteList();
+        MyNoteList.main.InitNoteList();
+        //InitNoteList();
     }
 
-    public void InitNoteList()
-    {
-        isInitNoteListDone = false;
-        var myNoteList = MyNoteList.myNoteList.GetComponent<MyNoteList>();
-        var content = myNoteList.content;
+    //public void InitNoteList()
+    //{
+    //    MyNoteList.isInitNoteListDone = false;
+    //    var myNoteList = MyNoteList.myNoteList.GetComponent<MyNoteList>();
+    //    var content = myNoteList.content;
 
-        foreach (Transform child in content.transform)
-        {
-            Destroy(child.gameObject);
-        }
+    //    foreach (Transform child in content.transform)
+    //    {
+    //        Destroy(child.gameObject);
+    //    }
 
-        var notelist = UserDataManager.Instance.GetNoteList();
+    //    var notelist = UserDataManager.Instance.GetNoteList();
 
-        foreach (var d in notelist)
-        {
-            Debug.Log(" note name :" + d);
-            var b = myNoteList.myNoteButton;
-            var o = Instantiate(b.gameObject);
-            o.transform.SetParent(MyNoteList.myNoteList.GetComponent<MyNoteList>().content, false);
-            o.GetComponent<MyNoteButton>().SetNoteName(d.Key);
-        }
+    //    foreach (var d in notelist)
+    //    {
+    //        Debug.Log(" note name :" + d);
+    //        var b = myNoteList.myNoteButton;
+    //        var o = Instantiate(b.gameObject);
+    //        o.transform.SetParent(MyNoteList.myNoteList.GetComponent<MyNoteList>().content, false);
+    //        o.GetComponent<MyNoteButton>().SetNoteName(d.Key);
+    //    }
 
-        isInitNoteListDone = true;
-        GameEventMessage.SendEvent("MyNoteListDone");
-    }
+    //    MyNoteList.isInitNoteListDone = true;
+    //    GameEventMessage.SendEvent("MyNoteListDone");
+    //}
 }

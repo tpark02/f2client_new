@@ -50,7 +50,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
     {
 
     }
-    public void ShowWarningPopup(string msg)
+    public void ShowWarningPopup(string msg, Action callBack = null)
     {
         UIPopupManager.ClearQueue();
         var p = UIPopupManager.GetPopup("WarningPopup");
@@ -61,6 +61,10 @@ public class NetWorkManager : Singleton<NetWorkManager>
         }
         p.Data.SetButtonsCallbacks(() =>
         {
+            if (callBack != null)
+            {
+                callBack();
+            }
             UIPopupManager.ClearQueue();
         });
         p.Data.SetLabelsTexts("Error", msg);
@@ -177,7 +181,9 @@ public class NetWorkManager : Singleton<NetWorkManager>
         }
     }
 
-    public void ShowSelectNotePopup(int vocabId, FavoriteToggle toggle, VocabPanel panel)
+    public void ShowSelectNotePopup(int vocabId
+        , FavoriteToggle toggle
+        , VocabPanel panel)
     {
         var p = UIPopupManager.GetPopup("SelectNotePopup");
         if (p == null)

@@ -36,6 +36,11 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
     }
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (ViewVocabTest.isVocabTestInProgress == true)
+        {
+            return;
+        }
+
         clicked++;
         if (clicked == 1)
         {
@@ -52,7 +57,9 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
             if (currentColorIndex == 0)
             {
                 currentColorIndex = 1;
-                NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id, null, gameObject.GetComponent<VocabPanel>());
+                NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id
+                    , null
+                    , gameObject.GetComponent<VocabPanel>());
             }
             else if (currentColorIndex == 1)
             {

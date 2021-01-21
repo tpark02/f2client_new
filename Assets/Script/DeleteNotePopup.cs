@@ -21,8 +21,8 @@ public class DeleteNotePopup : MonoBehaviour
         StartCoroutine(NetWorkManager.Instance.DeleteAllMyVocabs(noteName));
         yield return new WaitWhile(() => { return false == NetWorkManager.Instance.isJsonDone; });
         UserDataManager.Instance.DeleteMyNote(noteName);
-        DrawerLeft.main.InitNoteList();
-        yield return new WaitWhile(() => { return false == DrawerLeft.isInitNoteListDone; });
+        MyNoteList.main.InitNoteList();
+        yield return new WaitWhile(() => { return false == MyNoteList.isInitNoteListDone; });
         GameEventMessage.SendEvent("DeleteNoteDone");
         UIPopupManager.ClearQueue();
     }

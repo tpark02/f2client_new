@@ -37,7 +37,9 @@ public class FavoriteToggle : MonoBehaviour
             isOn = false;
             check.SetActive(false);
         };
-        NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id, GetComponent<FavoriteToggle>(), null);
+        NetWorkManager.Instance.ShowSelectNotePopup(vocabData.id
+            , GetComponent<FavoriteToggle>()
+            , null);
     }
 
     public void ToggleOff()

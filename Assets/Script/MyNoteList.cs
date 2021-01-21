@@ -1,19 +1,23 @@
 ﻿using System;
+using Doozy.Engine;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MyNoteList : MonoBehaviour
 {
-    public static GameObject myNoteList;
+    public static bool isInitNoteListDone = false;
+    public static Action showBackButtonCallBack = null;
+    public static MyNoteList main = null;
     [SerializeField] public Transform content;
     [SerializeField] public MyNoteButton myNoteButton; 
-    public static Action showBackButtonCallBack = null;
+    [SerializeField] public GameObject emptyPanel;
+    [SerializeField] public GameObject scrollView;
 
     private Vector3 startPos;
 
     void Awake()
     {
-        myNoteList = gameObject;
+        main = gameObject.GetComponent<MyNoteList>();
     }
     void Start()
     {
@@ -38,6 +42,43 @@ public class MyNoteList : MonoBehaviour
         StatusBar.statusBar.GetComponent<StatusBar>().selectVocabScroll.SetActive(false);
 
         StatusBar.statusBar.GetComponent<StatusBar>().addNewNoteButton.gameObject.SetActive(true);
+    }
+    public void InitNoteList()
+    {
+        isInitNoteListDone = false;
+        //var myNoteList = MyNoteList.myNoteList.GetComponent<MyNoteList>();
+        //var content = myNoteList.content;
+
+        foreach (Transform child in content.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        var notelist = UserDataManager.Instance.GetNoteList();
+        var noteCount = notelist.Count;
+        if (noteCount <= 0)
+        {
+            scrollView.SetActive(false);
+            emptyPanel.SetActive(true);
+            isInitNoteListDone = true;
+            return;
+        }
+        else
+        {
+            scrollView.SetActive(true);
+            emptyPanel.SetActive(false);
+        }
+        foreach (var d in notelist)
+        {
+            Debug.Log(" note name :" + d);
+            var b = myNoteButton;
+            var o = Instantiate(b.gameObject);
+            o.transform.SetParent(content, false);
+            o.GetComponent<MyNoteButton>().SetNoteName(d.Key);
+        }
+
+        isInitNoteListDone = true;
+        GameEventMessage.SendEvent("MyNoteListDone");
     }
     public void ResetScrollPos()
     {

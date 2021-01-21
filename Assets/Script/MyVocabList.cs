@@ -8,8 +8,10 @@ using UnityEngine.UI;
 
 public class MyVocabList : MonoBehaviour
 {
+    [SerializeField] public GameObject scrollView;
     [SerializeField] public Transform content;
     [SerializeField] public MyVocabButton myVocabButton;
+    [SerializeField] public GameObject emptyPanel;
 
     public static Action showBackButtonCallBack = null;
     public static Action InitSelectVocabScrollListCallBack = null;
@@ -20,7 +22,7 @@ public class MyVocabList : MonoBehaviour
 
     private Vector3 startPos;
     //private int selectedDay = 0;        // for sorting function
-    private string selectedNoteName = string.Empty;
+    //private string selectedNoteName = string.Empty;
 
     void Start()
     {
@@ -48,12 +50,13 @@ public class MyVocabList : MonoBehaviour
 
     public void LoadVocabRoutine(string noteName)
     {
-        selectedNoteName = noteName;
+        //selectedNoteName = noteName;
         OX_DataLoader.currentNoteName = noteName;
 
         isListLoadingDone = false;
 
         var list = UserDataManager.Instance.GetUserStudyVocabList();
+        
         for (int j = 0; j < OX_DataLoader.eachDayVocabCount; j++)
         {
             var c = content.transform.GetChild(j).GetComponent<MyVocabButton>();
@@ -63,6 +66,7 @@ public class MyVocabList : MonoBehaviour
             }
         }
 
+        int currentNoteListCount = 0;
         int i = 0;
         foreach (var s in list)
         {
@@ -81,7 +85,20 @@ public class MyVocabList : MonoBehaviour
                 c.favoriteToggle.SetCheck(true);
             }
             i++;
+            currentNoteListCount++;
         }
+
+        if (currentNoteListCount <= 0)
+        {
+            scrollView.SetActive(false);
+            emptyPanel.SetActive(true);
+        }
+        else
+        {
+            scrollView.SetActive(true);
+            emptyPanel.SetActive(false);
+        }
+
         InitSelectVocabScrollListCallBack();
         isListLoadingDone = true;
     }

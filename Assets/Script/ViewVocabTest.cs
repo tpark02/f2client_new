@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class ViewVocabTest : MonoBehaviour
 {
+    public static bool isVocabTestInProgress = false;
     public static Action showBackButtonCallBack = null;
     public static GameObject viewVocabTest = null;
     public static bool isTestLoadingDone = false;
@@ -16,7 +17,7 @@ public class ViewVocabTest : MonoBehaviour
     [SerializeField] public GameObject progressPanel2;
     [SerializeField] public Text vocabText;
     [SerializeField] public Text debugNumberText;
-
+    
     private int answerChoiceIndex = 0;
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,8 @@ public class ViewVocabTest : MonoBehaviour
         ChoiceButton.isClickable = true;
 #if UNITY_EDITOR
         debugNumberText.gameObject.SetActive(true);
+#else
+        debugNumberText.gameObject.SetActive(false);
 #endif
     }
 
