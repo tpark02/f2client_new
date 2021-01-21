@@ -76,4 +76,10 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
             clicked = 0;
         }
     }
+
+    public void OnClickPlayAudio()
+    {
+        TTS.Instance.SetAudio(vocab);
+        TTS.Instance.PlayAudio();
+    }
 }
