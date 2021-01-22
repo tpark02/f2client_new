@@ -133,38 +133,38 @@ public static class OX_DataLoader
             v.id = ((int)originalData[i]["id"]);
             v.vocab = CheckDataEmpty((string)originalData[i]["vocab"]);
             v.def = CheckDataEmpty((string)originalData[i]["def"]);
-            v.e1 = CheckDataEmpty((string)originalData[i]["e1"]);
-            v.t1 = CheckDataEmpty((string)originalData[i]["t1"]);
-            v.e2 = CheckDataEmpty((string)originalData[i]["e2"]);
-            v.t2 = CheckDataEmpty((string)originalData[i]["t2"]);
-            v.sym = CheckDataEmpty((string)originalData[i]["sym"]);
-            v.aym = CheckDataEmpty((string)originalData[i]["aym"]);
-            v.type = CheckDataEmpty((string)originalData[i]["ps"]);
-            v.day = (i / eachDayVocabCount) + 1;
-            v.isUserCheck = false;
+//            v.e1 = CheckDataEmpty((string)originalData[i]["e1"]);
+//            v.t1 = CheckDataEmpty((string)originalData[i]["t1"]);
+//            v.e2 = CheckDataEmpty((string)originalData[i]["e2"]);
+//            v.t2 = CheckDataEmpty((string)originalData[i]["t2"]);
+//            v.sym = CheckDataEmpty((string)originalData[i]["sym"]);
+//            v.aym = CheckDataEmpty((string)originalData[i]["aym"]);
+//            v.type = CheckDataEmpty((string)originalData[i]["ps"]);
+//            v.day = (i / eachDayVocabCount) + 1;
+//            v.isUserCheck = false;
 
-            v.e1 = ColorVocab(v.e1.ToLower(), v.vocab);
-            v.e2 = ColorVocab(v.e2.ToLower(), v.vocab);
+//            v.e1 = ColorVocab(v.e1.ToLower(), v.vocab);
+//            v.e2 = ColorVocab(v.e2.ToLower(), v.vocab);
 
-            if (v.e1[0] != '<')
-            {
-                v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
-            }
+//            if (v.e1[0] != '<')
+//            {
+//                v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
+//            }
 
-            if (v.e2[0] != '<')
-            {
-                v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
-            }
+//            if (v.e2[0] != '<')
+//            {
+//                v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
+//            }
 
-            v.e1 = v.e1.Trim();
-            v.e2 = v.e2.Trim();
-#if DEBUG
-            if (v.e1.Contains("<color") == false || v.e2.Contains("<color") == false)
-            {
-                Debug.Log("error e1: " + v.vocab);
-                errorStr += v.vocab + "\n";
-            }
-#endif
+//            v.e1 = v.e1.Trim();
+//            v.e2 = v.e2.Trim();
+//#if DEBUG
+//            if (v.e1.Contains("<color") == false || v.e2.Contains("<color") == false)
+//            {
+//                Debug.Log("error e1: " + v.vocab);
+//                errorStr += v.vocab + "\n";
+//            }
+//#endif
             vocablist.Add(v);
         }
 #if DEBUG
