@@ -40,17 +40,11 @@ public class SelectVocabButton : MonoBehaviour
         }
         else
         {
-            var data = OX_DataLoader.GetVocabDataById(d.id);
-            ViewVocabResultDetail.main.GetComponent<ViewVocabResultDetail>().SetVocabDetail(data, d.id,vocab
-                , d.def
-                , d.e1
-                , d.t1
-                , d.e2
-                , d.t2);
-            StatusBar.statusBar.GetComponent<StatusBar>().OnClickSelectListButton();
+            //ViewVocabResultDetail.main.GetComponent<ViewVocabResultDetail>().SetVocabDetail(d.id);
+            StartCoroutine(LoadVocabDetail(d.id, true));
         }
     }
-    public IEnumerator LoadVocabDetail(int vocabId)
+    public IEnumerator LoadVocabDetail(int vocabId, bool isTestReslt = false)
     {
         StartCoroutine(NetWorkManager.Instance.GetVocabDetailCo(vocabId));
         yield return new WaitWhile(() =>
@@ -59,7 +53,14 @@ public class SelectVocabButton : MonoBehaviour
         });
 
         var data = OX_DataLoader.GetVocabDataById(vocabId);
-        ViewVocabDetail.main.SetVocabDetail(data);
+        if (isTestReslt == false)
+        {
+            ViewVocabDetail.main.SetVocabDetail(data);
+        }
+        else
+        {
+            ViewVocabResultDetail.main.SetVocabDetail(data);
+        }
         StatusBar.statusBar.GetComponent<StatusBar>().OnClickSelectListButton();
     }
 }

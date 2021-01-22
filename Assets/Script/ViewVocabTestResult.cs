@@ -15,6 +15,8 @@ public class ViewVocabTestResult : MonoBehaviour
         {
             var d = OX_DataLoader.resultList[i];
             buttons[i].vocab.text = d.vocab;
+            buttons[i].vocabData = d;
+
             if (d.isCorrect)
             {
                 buttons[i].correct.SetActive(true);

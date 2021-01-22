@@ -30,7 +30,7 @@ public class ViewVocabDetail : MonoBehaviour
         
         StatusBar.statusBar.GetComponent<StatusBar>().ResetSelectedVocabScrollPos();
     }
-    public void SetVocabDetail(OX_DataLoader.VocabData data/*OX_DataLoader.VocabData data, int vocabId, string v, string d, string e1, string t1, string e2, string t2*/)
+    public void SetVocabDetail(OX_DataLoader.VocabData data)
     {
         var vocabdata = UserDataManager.Instance.vocabData;
 

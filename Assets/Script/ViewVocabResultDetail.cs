@@ -37,13 +37,19 @@ public class ViewVocabResultDetail : MonoBehaviour
     {
         ViewVocabTestResult.showHomeButtonCallBack();
     }
-    public void SetVocabDetail(OX_DataLoader.VocabData data, int vocabId, string v, string d, string e1, string t1, string e2, string t2)
+    //public void SetVocabDetail(OX_DataLoader.VocabData data, int vocabId, string v, string d, string e1, string t1, string e2, string t2)
+    public void SetVocabDetail(OX_DataLoader.VocabData data)
     {
-        var deflist = d.Split(new string[] { "[t]" }, StringSplitOptions.None);
-        vocab.text = v;
-        vocabPanel.vocab = v;
-        //vocabPanel.vocabId = vocabId;
+        var vocabdata = UserDataManager.Instance.vocabData;
+        vocab.text = data.vocab;
+        vocabPanel.vocab = data.vocab;
         vocabPanel.vocabData = data;
+
+        if (vocabdata.def.Equals("empty"))
+        {
+            return;
+        }
+        var deflist = vocabdata.def.Split(new string[] { "[t]" }, StringSplitOptions.None);
 
         def.text = string.Empty;
         for (int i = 0; i < deflist.Length; i++)
@@ -56,17 +62,22 @@ public class ViewVocabResultDetail : MonoBehaviour
             def.text += "\n";
         }
 
-        ex.text = e1 + "<size=25>" + "\n" + t1 + "</size>" + "\n\n" + e2 + "<size=25>" + "\n" + t2 + "</size>";
+        var ee1 = OX_DataLoader.ColorVocab(vocabdata.e1.ToLower(), data.vocab);
+        var tt1 = vocabdata.t1;
+        var ee2 = OX_DataLoader.ColorVocab(vocabdata.e2.ToLower(), data.vocab);
+        var tt2 = vocabdata.t2;
+
+        ex.text = ee1
+                  + "<size=25>" + "\n"
+                  + tt1
+                  + "</size>" + "\n\n"
+                  + ee2
+                  + "<size=25>" + "\n"
+                  + tt2 + "</size>";
 
         vocabPanel.SetColor(false);
 
-        //bool isVocabExist = UserDataManager.Instance.IsVocabExist(vocab.text);
-        //if (isVocabExist)
-        //{
-        //    vocabPanel.SetColor(true);
-        //}
-
-        bool isExist = UserDataManager.Instance.IsVocabExist(vocabId);
+        bool isExist = UserDataManager.Instance.IsVocabExist(data.id);
 
         if (isExist)
         {
