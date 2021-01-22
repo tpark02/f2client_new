@@ -19,30 +19,33 @@ public class SelectVocabButton : MonoBehaviour
 
     public void OnClickSelectVocabButton()
     {
-       
+        var d = OX_DataLoader.GetVocab(vocab);
+
         if (isMyList)
         {
-            var data = OX_DataLoader.GetVocabDataByVocab(vocab);
-            MyVocabDetail.myVocabDetail.GetComponent<MyVocabDetail>().SetVocabDetail(data, vocab
-                , data.def
-                , data.e1
-                , data.t1
-                , data.e2
-                , data.t2);
-            StatusBar.statusBar.GetComponent<StatusBar>().OnClickSelectListButton();
+            StartCoroutine(LoadVocabDetail(d.id));
             return;
         }
-
-        var d = OX_DataLoader.GetVocab(vocab);
         if (isTestResult == false)
         {
             StartCoroutine(LoadVocabDetail(d.id));
         }
         else
         {
-            //ViewVocabResultDetail.main.GetComponent<ViewVocabResultDetail>().SetVocabDetail(d.id);
             StartCoroutine(LoadVocabDetail(d.id, true));
         }
+    }
+
+    public IEnumerator LoadMyVocabDetail(int vocabId)
+    {
+        StartCoroutine(NetWorkManager.Instance.GetVocabDetailCo(vocabId));
+        yield return new WaitWhile(() =>
+        {
+            return false == NetWorkManager.Instance.isJsonDone;
+        });
+        var data = OX_DataLoader.GetVocabDataById(vocabId);
+        MyVocabDetail.main.SetVocabDetail(data);
+        StatusBar.statusBar.GetComponent<StatusBar>().OnClickSelectListButton();
     }
     public IEnumerator LoadVocabDetail(int vocabId, bool isTestReslt = false)
     {

@@ -26,30 +26,23 @@ public class MyVocabButton : MonoBehaviour
         StatusBar.RecordPrevTitle((int)Title.MyVocabList);
         StatusBar.SetStatusTitle((int)Title.MyVocabDetail);
 
-        StartCoroutine(LoadVocabDetail());
+        MyVocabDetail.main.gameObject.SetActive(true);
+
+        StartCoroutine(LoadVocabDetail(vocabData.id));
     }
 
-    private IEnumerator LoadVocabDetail()
+    private IEnumerator LoadVocabDetail(int vocabId)
     {
-        MyVocabDetail.myVocabDetail.SetActive(true);
-        
-        MyVocabDetail.isDetailDone = false;
-
-        MyVocabDetail.myVocabDetail.GetComponent<MyVocabDetail>().SetVocabDetail(vocabData, vocabData.vocab
-            , vocabData.def
-            , vocabData.e1
-            , vocabData.t1
-            , vocabData.e2
-            , vocabData.t2);
-
-        MyVocabDetail.isDetailDone = true;
+        StartCoroutine(NetWorkManager.Instance.GetVocabDetailCo(vocabId));
         yield return new WaitWhile(() =>
         {
-            return MyVocabDetail.isDetailDone == false;
+            return false == NetWorkManager.Instance.isJsonDone;
         });
+
+        MyVocabDetail.main.SetVocabDetail(vocabData);
 
         StatusBar.statusBar.GetComponent<StatusBar>().sortPanel.SetActive(false);
 
-        GameEventMessage.SendEvent("MyVocabDetailDone");
+        GameEventMessage.SendEvent("VocabDetailLoadingDone");
     }
 }
