@@ -33,10 +33,10 @@ public class ViewVocabResultDetail : MonoBehaviour
         initVocabTestResultListCallBack();
     }
 
-    public void AfterView()
-    {
-        ViewVocabTestResult.showHomeButtonCallBack();
-    }
+    //public void AfterView()
+    //{
+    //    ViewVocabTestResult.showHomeButtonCallBack();
+    //}
     //public void SetVocabDetail(OX_DataLoader.VocabData data, int vocabId, string v, string d, string e1, string t1, string e2, string t2)
     public void SetVocabDetail(OX_DataLoader.VocabData data)
     {

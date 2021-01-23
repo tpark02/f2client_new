@@ -36,6 +36,7 @@ public class NetWorkManager : Singleton<NetWorkManager>
     private string deleteMyNoteUrl = "deleteMyNote";
     private string deleteAllMyVocabs = "deleteAllMyVocabs";
     private string getVocabDetail = "getVocabDetail";
+    private string getTodayVocabDetail = "getTodayVocabDetail";
 
     private string recvData = string.Empty;
     
@@ -87,11 +88,24 @@ public class NetWorkManager : Singleton<NetWorkManager>
         {
             return false == isLoadingDone;
         });
-        UnPack((int)PacketType.Get_VOCAB_DETAIL);
+        UnPack((int)PacketType.GET_VOCAB_DETAIL);
+    }
+    public IEnumerator GetTodayVocabDetailCo()
+    {
+        WWWForm packet = new WWWForm();
+        //packet.AddField("vocab_index", vocabId);
+
+        StartCoroutine(MesseageLoop(getTodayVocabDetail, packet, RecvPacket));
+
+        yield return new WaitWhile(() =>
+        {
+            return false == isLoadingDone;
+        });
+        UnPack((int)PacketType.GET_TODAY_VOCAB_DETAIL);
     }
     #region My Vocab Functions
 
-   
+
     /// <summary>
     /// add vocab to the note 
     /// </summary>
@@ -229,8 +243,11 @@ public class NetWorkManager : Singleton<NetWorkManager>
             case (int)PacketType.GET_MY_NOTE_LIST:
                 SetMyNoteList(data);
                 break;
-            case (int)PacketType.Get_VOCAB_DETAIL:
+            case (int)PacketType.GET_VOCAB_DETAIL:
                 SetVocabDetail(data);
+                break;
+            case (int)PacketType.GET_TODAY_VOCAB_DETAIL:
+                SetTodayVocabDetail(data);
                 break;
         }
     }
@@ -257,6 +274,24 @@ public class NetWorkManager : Singleton<NetWorkManager>
         {
             //noteList.Add(d.Value["note_name"]);
             UserDataManager.Instance.AddUserNote(d.Value["note_name"]);
+        }
+        isJsonDone = true;
+    }
+    public void SetTodayVocabDetail(JSONNode data)
+    {
+        isJsonDone = false;
+        //noteList.Clear();
+        foreach (var d in data)
+        {
+            UserDataManager.Instance.todayVocabData = new TodayVocab(
+                Int32.Parse(d.Value["id"]),
+                d.Value["vocab"],
+                d.Value["def"],
+                d.Value["type"],
+                d.Value["example1"],
+                d.Value["translate1"],
+                d.Value["example2"],
+                d.Value["translate2"]);
         }
         isJsonDone = true;
     }

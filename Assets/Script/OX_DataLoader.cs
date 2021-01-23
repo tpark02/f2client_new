@@ -106,6 +106,10 @@ public static class OX_DataLoader
         }
     }
 
+    public static int GetRandomIndex()
+    {
+        return random.Next(0, 900);
+    }
     public static void InitVocabList(int d)
     {
         string errorStr = string.Empty;
@@ -605,31 +609,31 @@ public static class OX_DataLoader
                 v.id = ((int)d["id"]);
                 v.vocab = CheckDataEmpty((string)d["vocab"]);
                 v.def = CheckDataEmpty((string)d["def"]);
-                v.e1 = CheckDataEmpty((string)d["e1"]);
-                v.t1 = CheckDataEmpty((string)d["t1"]);
-                v.e2 = CheckDataEmpty((string)d["e2"]);
-                v.t2 = CheckDataEmpty((string)d["t2"]);
-                v.sym = CheckDataEmpty((string)d["sym"]);
-                v.aym = CheckDataEmpty((string)d["aym"]);
-                v.type = CheckDataEmpty((string)d["ps"]);
+                //v.e1 = CheckDataEmpty((string)d["e1"]);
+                //v.t1 = CheckDataEmpty((string)d["t1"]);
+                //v.e2 = CheckDataEmpty((string)d["e2"]);
+                //v.t2 = CheckDataEmpty((string)d["t2"]);
+                //v.sym = CheckDataEmpty((string)d["sym"]);
+                //v.aym = CheckDataEmpty((string)d["aym"]);
+                //v.type = CheckDataEmpty((string)d["ps"]);
                 //v.day = (i / eachDayVocabCount) + 1;
-                v.isUserCheck = false;
+                //v.isUserCheck = false;
 
-                v.e1 = ColorVocab(v.e1.ToLower(), v.vocab);
-                v.e2 = ColorVocab(v.e2.ToLower(), v.vocab);
+                //v.e1 = ColorVocab(v.e1.ToLower(), v.vocab);
+                //v.e2 = ColorVocab(v.e2.ToLower(), v.vocab);
 
-                if (v.e1[0] != '<')
-                {
-                    v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
-                }
+                //if (v.e1[0] != '<')
+                //{
+                //    v.e1 = Char.ToUpper(v.e1[0]) + v.e1.Substring(1);
+                //}
 
-                if (v.e2[0] != '<')
-                {
-                    v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
-                }
+                //if (v.e2[0] != '<')
+                //{
+                //    v.e2 = Char.ToUpper(v.e2[0]) + v.e2.Substring(1);
+                //}
 
-                v.e1 = v.e1.Trim();
-                v.e2 = v.e2.Trim();
+                //v.e1 = v.e1.Trim();
+                //v.e2 = v.e2.Trim();
                 return v;
             }
 

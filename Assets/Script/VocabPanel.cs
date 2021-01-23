@@ -20,6 +20,10 @@ public class VocabPanel : MonoBehaviour, IPointerClickHandler
         vocabPanelColorList[0] = new Color32(255, 255, 255, 150);
         vocabPanelColorList[1] = new Color32(55, 71, 79, 150);
     }
+    public void OnView()
+    {
+
+    }
 
     public void SetColor(bool isChecked)
     {

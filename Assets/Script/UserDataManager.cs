@@ -22,11 +22,35 @@ public struct CurrentVocab
     }
 }
 
+public struct TodayVocab
+{
+    public int id;
+    public string vocab;
+    public string def;
+    public string type;
+    public string e1;
+    public string t1;
+    public string e2;
+    public string t2;
+
+    public TodayVocab(int id, string v, string d, string t, string e1, string t1, string e2, string t2)
+    {
+        this.id = id;
+        vocab = v;
+        def = d.Equals("") ? "empty" : d;
+        type = t.Equals("") ? "empty" : t;
+        this.e1 = e1.Equals("") ? "empty" : e1;
+        this.t1 = t1.Equals("") ? "empty" : t1;
+        this.e2 = e2.Equals("") ? "empty" : e2;
+        this.t2 = t2.Equals("") ? "empty" : t2;
+    }
+}
 public class UserDataManager : Singleton<UserDataManager>
 {
     private Dictionary<int, string> userStudyVocabList = new Dictionary<int, string>();
     private Dictionary<string, int> userNoteCount = new Dictionary<string, int>();
     public CurrentVocab vocabData = new CurrentVocab("empty", "empty", "empty", "empty", "empty", "empty");
+    public TodayVocab todayVocabData = new TodayVocab(1, "empty", "empty", "empty", "empty", "empty", "empty", "empty");
     public string todaysExample = string.Empty;
     //public void SetUserStudyVocabList(Dictionary<int, string> d)
     //{

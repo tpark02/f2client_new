@@ -11,7 +11,7 @@ public class BackButtonController : MonoBehaviour
     void Start()
     {
         gameObject.SetActive(false);
-
+        ViewHome.hideBackButtonCallBack = HideBackButton;
         ViewVocabList.showBackButtonCallBack = ShowBackButton;
         ViewVocabDay.showBackButtonCallBack = ShowBackButton;
         ViewVocabTestDay.showBackButtonCallBack = ShowBackButton;
@@ -88,6 +88,10 @@ public class BackButtonController : MonoBehaviour
             bar.sortButton.transform.GetChild(0).GetComponent<Text>().text = "Sort List  ";
         }
 
+        if (prevPage == (int) Title.VOCAB_TEST_RESULT)
+        {
+            ViewVocabTestResult.showHomeButtonCallBack();
+        }
         ViewVocabTest.isVocabTestInProgress = false;
     }
 
