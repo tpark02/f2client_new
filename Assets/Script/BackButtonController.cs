@@ -1,4 +1,6 @@
 ﻿using System;
+using DG.Tweening;
+using Doozy.Engine.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,9 +9,12 @@ public class BackButtonController : MonoBehaviour
     public static int selectedVocabDay = -1;
     public static Action resetVocabListScrollPos = null;
     public static Action resetVocabDayScrollPos = null;
+    public static BackButtonController main = null;
     [SerializeField] private GameObject homeButton = null;
     void Start()
     {
+        main = GetComponent<BackButtonController>();
+
         gameObject.SetActive(false);
         ViewHome.hideBackButtonCallBack = HideBackButton;
         ViewVocabList.showBackButtonCallBack = ShowBackButton;
@@ -21,6 +26,10 @@ public class BackButtonController : MonoBehaviour
         ViewVocabTestResult.showHomeButtonCallBack = ShowHomeButton;
         ViewVocabResultDetail.showBackButtonCallBack = ShowBackButton;
         DrawerLeft.hideBackButtonCallBack = HideBackButton;
+        // fade button
+        ViewVocabList.enableBackButtonCallBack = EnableBackButton;
+        MyVocabList.enableBackButtonCallBack = EnableBackButton;
+        MyNoteList.enableBackButtonCallBack = EnableBackButton;
 
         MyNoteList.showBackButtonCallBack = ShowBackButton;
         MyVocabList.showBackButtonCallBack = ShowBackButton;
@@ -75,7 +84,7 @@ public class BackButtonController : MonoBehaviour
 
         if (prevPage == (int) Title.VOCAB_LIST)
         {
-            ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(selectedVocabDay);
+            ViewVocabList.main.GetComponent<ViewVocabList>().LoadVocabRoutine(selectedVocabDay);
             var bar = StatusBar.statusBar.GetComponent<StatusBar>();
             bar.sortButton.transform.GetChild(0).GetComponent<Text>().text = "Sort List  ";
         }
@@ -110,5 +119,18 @@ public class BackButtonController : MonoBehaviour
     {
         gameObject.SetActive(false);
         homeButton.SetActive(false);
+    }
+    
+    public void EnableBackButton(float f)
+    {
+        GetComponent<CanvasGroup>().DOFade(f, 0f);
+        if (f <= 0.1f)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(true);
+        }
     }
 }

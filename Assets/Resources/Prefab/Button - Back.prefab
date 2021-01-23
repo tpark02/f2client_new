@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 2835836413675616431}
   - component: {fileID: 2835836413675616424}
   - component: {fileID: 5620078368071525696}
+  - component: {fileID: 4414125587769887889}
   m_Layer: 0
   m_Name: Button - Back
   m_TagString: Untagged
@@ -255,9 +256,9 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -2590,3 +2591,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da8a5d4d9990e04ea64e335962269a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  homeButton: {fileID: 0}
+--- !u!225 &4414125587769887889
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2835836413675616426}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

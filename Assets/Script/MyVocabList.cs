@@ -13,7 +13,9 @@ public class MyVocabList : MonoBehaviour
     [SerializeField] public MyVocabButton myVocabButton;
     [SerializeField] public GameObject emptyPanel;
     [SerializeField] public VocabTouchNotice myVocabListTouchNotice;
+    //[SerializeField] public Scrollbar scrollBar;
 
+    public static Action<float> enableBackButtonCallBack = null;
     public static Action showBackButtonCallBack = null;
     public static Action InitSelectVocabScrollListCallBack = null;
     //public static Action<List<string>> InitSelectVocabBySortTypeCallBack = null;
@@ -32,6 +34,20 @@ public class MyVocabList : MonoBehaviour
         BackButtonController.resetVocabListScrollPos = ResetScrollPos;
         StatusBar.sortAlphabeticallyCallBack = SortAlphabetically;
         StatusBar.sortByTypeCallBack = SortByType;
+
+        //scrollBar.onValueChanged.AddListener((v) =>
+        //{
+        //    Debug.Log(v.ToString());
+
+        //    if (v < 0.5f)
+        //    {
+
+        //        enableBackButtonCallBack(v);
+        //        return;
+        //    }
+        //    enableBackButtonCallBack(v);
+
+        //});
     }
     public void OnView()
     {

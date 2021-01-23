@@ -8,12 +8,14 @@ using UnityEngine.UI;
 public class ViewVocabList : MonoBehaviour
 {
     [SerializeField] public Transform content;
-    
+    [SerializeField] public Scrollbar scrollBar;
+
     public static Action showBackButtonCallBack = null;
+    public static Action<float> enableBackButtonCallBack = null;
     public static Action InitSelectVocabScrollListCallBack = null;
     public static Action<Dictionary<string, OX_DataLoader.VocabData>> InitSelectVocabBySortTypeCallBack = null;
 
-    public static GameObject viewVocabList;
+    public static GameObject main = null;
     public static bool isListLoadingDone = false;
     
     private Vector3 startPos;
@@ -21,11 +23,25 @@ public class ViewVocabList : MonoBehaviour
 
     void Start()
     {
-        viewVocabList = gameObject;
+        main = gameObject;
         startPos = content.localPosition;
         BackButtonController.resetVocabListScrollPos = ResetScrollPos;
         StatusBar.sortAlphabeticallyCallBack = SortAlphabetically;
         StatusBar.sortByTypeCallBack = SortByType;
+
+        scrollBar.onValueChanged.AddListener((v) =>
+        {
+            Debug.Log(v.ToString());
+            
+            if (v < 0.5f)
+            {
+                
+                enableBackButtonCallBack(v);
+                return;
+            }
+            enableBackButtonCallBack(v);
+            
+        });
     }
     public void OnView()
     {

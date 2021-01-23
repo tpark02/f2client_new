@@ -24,16 +24,16 @@ public class VocabDayButton : MonoBehaviour
         StatusBar.RecordPrevTitle((int) Title.VOCAB_DAY);
         StatusBar.SetStatusTitle((int)Title.VOCAB_LIST);
 
-        ViewVocabList.viewVocabList.SetActive(true);
+        ViewVocabList.main.SetActive(true);
         //StartCoroutine(LoadVocabList(nDay));
         OX_DataLoader.InitVocabList(nDay);
         BackButtonController.selectedVocabDay = nDay;
-        ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(nDay);
+        ViewVocabList.main.GetComponent<ViewVocabList>().LoadVocabRoutine(nDay);
     }
 
     //private void LoadVocabList(int d)
     //{
-    //    //ViewVocabList.viewVocabList.GetComponent<ViewVocabList>().LoadVocabRoutine(d);
+    //    //ViewVocabList.main.GetComponent<ViewVocabList>().LoadVocabRoutine(d);
     //    //yield return new WaitWhile(() =>
     //    //{
     //    //    return ViewVocabList.isListLoadingDone == false;

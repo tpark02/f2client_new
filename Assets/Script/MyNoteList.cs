@@ -8,11 +8,15 @@ public class MyNoteList : MonoBehaviour
     public static bool isInitNoteListDone = false;
     public static Action showBackButtonCallBack = null;
     public static MyNoteList main = null;
+    public static Action<float> enableBackButtonCallBack = null;
+
     [SerializeField] public Transform content;
     [SerializeField] public MyNoteButton myNoteButton; 
     [SerializeField] public GameObject emptyPanel;
     [SerializeField] public GameObject scrollView;
     [SerializeField] public VocabTouchNotice vocabTouchNotice;
+    //[SerializeField] public Scrollbar scrollBar;
+
     private Vector3 startPos;
 
     void Awake()
@@ -29,6 +33,20 @@ public class MyNoteList : MonoBehaviour
         
         startPos = content.localPosition;
         BackButtonController.resetVocabDayScrollPos = ResetScrollPos;
+
+        //scrollBar.onValueChanged.AddListener((v) =>
+        //{
+        //    Debug.Log(v.ToString());
+
+        //    if (v < 0.5f)
+        //    {
+
+        //        enableBackButtonCallBack(v);
+        //        return;
+        //    }
+        //    enableBackButtonCallBack(v);
+
+        //});
     }
 
     public void OnView()

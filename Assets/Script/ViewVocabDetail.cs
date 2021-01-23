@@ -8,6 +8,8 @@ public class ViewVocabDetail : MonoBehaviour
     [SerializeField] public Text def;
     [SerializeField] public Text ex;
     [SerializeField] public VocabPanel vocabPanel;
+   
+    
     public static Action showBackButtonCallBack = null;
     
     public static ViewVocabDetail main;
@@ -29,6 +31,11 @@ public class ViewVocabDetail : MonoBehaviour
         StatusBar.statusBar.GetComponent<StatusBar>().selectVocabScroll.SetActive(false);
         
         StatusBar.statusBar.GetComponent<StatusBar>().ResetSelectedVocabScrollPos();
+    }
+
+    public void OnViewLoaded()
+    {
+        ViewVocabList.main.GetComponent<ViewVocabList>().ResetScrollPos();
     }
     public void SetVocabDetail(OX_DataLoader.VocabData data)
     {
