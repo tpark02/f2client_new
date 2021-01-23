@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: TouchySettings
   m_EditorClassIdentifier: 
   LongTapDuration: 0.4
-  SwipeLength: 2.4
+  SwipeLength: 9

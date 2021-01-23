@@ -84,6 +84,7 @@ public class DrawerLeft : MonoBehaviour
 
     public void OnClickLogOut()
     {
+#if !UNITY_EDITOR
         BackendReturnObject BRO = Backend.BMember.Logout();
         if (BRO.IsSuccess())
         {
@@ -93,7 +94,8 @@ public class DrawerLeft : MonoBehaviour
         {
             
         }
-
+#endif
+        Application.Quit();
         /* 비동기
          * Update() 에서 처리할 거 없음.  
         Backend.BMember.Logout((callback) => {
