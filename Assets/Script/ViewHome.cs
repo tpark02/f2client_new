@@ -18,7 +18,7 @@ public class ViewHome : MonoBehaviour
         Application.targetFrameRate = 60;
         homeVocabTouchNotice.SetLabel("단어를 두번 터치하면단어장에 추가됩니다.");
         main = GetComponent<ViewHome>();
-#if UNITY_EDITOR
+
         OX_DataLoader.InitOriginalData();
         //OX_DataLoader.TestMyList();
         //NetWorkManager.Instance.LoadDataFromServer();
@@ -45,7 +45,7 @@ public class ViewHome : MonoBehaviour
 
         hideBackButtonCallBack();
         GameEventMessage.SendEvent("PrepareDataDone");
-#endif
+
     }
 
     public void OnView()
